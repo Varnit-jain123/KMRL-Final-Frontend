@@ -9,69 +9,74 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
+import { useTranslation } from "../contexts/TranslationContext"; // Import translation context
 
 interface NoticesSectionProps {
   onNoticeClick: (noticeId: string) => void;
 }
 
-// Mock notices data
-const initialNotices = [
-  {
-    id: "notice1",
-    title: "System Maintenance Schedule",
-    message: "The document management system will undergo maintenance on January 20th from 2:00 AM to 6:00 AM. Please save your work before this time.",
-    priority: "high",
-    department: "IT Department",
-    author: "IT Admin",
-    timestamp: "2024-01-15T09:00:00Z",
-    isRead: false,
-    attachments: []
-  },
-  {
-    id: "notice2",
-    title: "New Safety Protocol Implementation",
-    message: "All employees must complete the updated safety training by January 25th. Please check the training portal for more details.",
-    priority: "urgent",
-    department: "Safety Department", 
-    author: "Safety Officer",
-    timestamp: "2024-01-14T14:30:00Z",
-    isRead: false,
-    attachments: ["safety_protocol_v2.pdf"]
-  },
-  {
-    id: "notice3",
-    title: "Monthly Team Meeting",
-    message: "The monthly all-hands meeting is scheduled for January 22nd at 10:00 AM in the main conference room.",
-    priority: "normal",
-    department: "HR Department",
-    author: "HR Manager", 
-    timestamp: "2024-01-13T11:15:00Z",
-    isRead: true,
-    attachments: []
-  }
-];
-
-const departments = [
-  "All Departments",
-  "Engineering Department",
-  "Safety Department", 
-  "Finance Department",
-  "HR Department",
-  "IT Department",
-  "Operations Department"
-];
-
 export const NoticesSection = ({ onNoticeClick }: NoticesSectionProps) => {
-  const [notices, setNotices] = useState(initialNotices);
+  const { t } = useTranslation(); // Use translation hook
+
+  // Mock notices data with translation keys
+  const initialNoticesData = [
+    {
+      id: "notice1",
+      titleKey: "notices.system.maintenance.title",
+      messageKey: "notices.system.maintenance.message",
+      priority: "high",
+      departmentKey: "notices.departments.it",
+      authorKey: "notices.authors.it.admin",
+      timestamp: "2024-01-15T09:00:00Z",
+      isRead: false,
+      attachments: []
+    },
+    {
+      id: "notice2",
+      titleKey: "notices.safety.protocol.title",
+      messageKey: "notices.safety.protocol.message",
+      priority: "urgent",
+      departmentKey: "notices.departments.safety", 
+      authorKey: "notices.authors.safety.officer",
+      timestamp: "2024-01-14T14:30:00Z",
+      isRead: false,
+      attachments: ["safety_protocol_v2.pdf"]
+    },
+    {
+      id: "notice3",
+      titleKey: "notices.team.meeting.title",
+      messageKey: "notices.team.meeting.message",
+      priority: "normal",
+      departmentKey: "notices.departments.hr",
+      authorKey: "notices.authors.hr.manager", 
+      timestamp: "2024-01-13T11:15:00Z",
+      isRead: true,
+      attachments: []
+    }
+  ];
+
+  const departmentsData = [
+    { key: "all", labelKey: "notices.departments.all" },
+    { key: "engineering", labelKey: "notices.departments.engineering" },
+    { key: "safety", labelKey: "notices.departments.safety" },
+    { key: "finance", labelKey: "notices.departments.finance" },
+    { key: "hr", labelKey: "notices.departments.hr" },
+    { key: "it", labelKey: "notices.departments.it" },
+    { key: "operations", labelKey: "notices.departments.operations" }
+  ];
+
+  const [notices, setNotices] = useState(initialNoticesData);
   const [isComposeOpen, setIsComposeOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("all");
+  const [filterDepartment, setFilterDepartment] = useState("all");
+  const [filterPriority, setFilterPriority] = useState("all");
   
   // Compose form state
   const [composeForm, setComposeForm] = useState({
     title: "",
     message: "",
     priority: "normal",
-    department: "All Departments",
+    department: "all",
     attachments: []
   });
 
@@ -83,20 +88,19 @@ export const NoticesSection = ({ onNoticeClick }: NoticesSectionProps) => {
     ));
   };
 
-  // Export unread count for parent component
-  const unreadNoticesCount = notices.filter(notice => !notice.isRead).length;
-
   const handleComposeNotice = () => {
     const newNotice = {
       id: `notice${Date.now()}`,
-      title: composeForm.title,
+      titleKey: "notices.custom.title", // For user-created notices, we'll store the actual text
+      messageKey: "notices.custom.message",
+      title: composeForm.title, // Store actual text for custom notices
       message: composeForm.message,
       priority: composeForm.priority,
-      department: composeForm.department,
-      author: "Current User",
+      departmentKey: departmentsData.find(d => d.key === composeForm.department)?.labelKey || "notices.departments.all",
+      authorKey: "notices.authors.current.user",
       timestamp: new Date().toISOString(),
       isRead: false,
-      attachments: composeForm.attachments
+      attachments: composeForm.attachments as string[]
     };
 
     setNotices(prev => [newNotice, ...prev]);
@@ -104,7 +108,7 @@ export const NoticesSection = ({ onNoticeClick }: NoticesSectionProps) => {
       title: "",
       message: "",
       priority: "normal", 
-      department: "All Departments",
+      department: "all",
       attachments: []
     });
     setIsComposeOpen(false);
@@ -122,38 +126,54 @@ export const NoticesSection = ({ onNoticeClick }: NoticesSectionProps) => {
     return priority === "urgent" ? "🚨" : priority === "high" ? "⚠️" : "ℹ️";
   };
 
-  const unreadNotices = notices.filter(notice => !notice.isRead);
-  const readNotices = notices.filter(notice => notice.isRead);
+  // Filter notices based on selected filters
+  const filteredNotices = notices.filter(notice => {
+    const matchesDepartment = filterDepartment === "all" || 
+      notice.departmentKey === departmentsData.find(d => d.key === filterDepartment)?.labelKey;
+    const matchesPriority = filterPriority === "all" || notice.priority === filterPriority;
+    return matchesDepartment && matchesPriority;
+  });
 
-  const NoticeCard = ({ notice, showActions = true }: { notice: typeof notices[0], showActions?: boolean }) => (
+  const unreadNotices = filteredNotices.filter(notice => !notice.isRead);
+  const readNotices = filteredNotices.filter(notice => notice.isRead);
+
+  const getNoticeTitle = (notice: any) => {
+    return notice.title || t(notice.titleKey);
+  };
+
+  const getNoticeMessage = (notice: any) => {
+    return notice.message || t(notice.messageKey);
+  };
+
+  const NoticeCard = ({ notice, showActions = true }: { notice: any, showActions?: boolean }) => (
     <Card className={`cursor-pointer hover:shadow-md transition-all ${!notice.isRead ? 'border-primary bg-primary/5' : ''}`}>
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between">
           <div className="flex-1">
             <div className="flex items-center space-x-2 mb-1">
               <span className="text-sm">{getPriorityIcon(notice.priority)}</span>
-              <CardTitle className="text-sm font-medium">{notice.title}</CardTitle>
+              <CardTitle className="text-sm font-medium">{getNoticeTitle(notice)}</CardTitle>
               {!notice.isRead && (
-                <Badge variant="default" className="text-xs">New</Badge>
+                <Badge variant="default" className="text-xs">{t('notices.badge.new')}</Badge>
               )}
             </div>
             <Badge variant={getPriorityColor(notice.priority)} className="text-xs">
-              {notice.priority.charAt(0).toUpperCase() + notice.priority.slice(1)}
+              {t(`notices.priority.${notice.priority}`)}
             </Badge>
           </div>
         </div>
       </CardHeader>
       
       <CardContent className="pt-0">
-        <p className="text-sm text-muted-foreground mb-4">{notice.message}</p>
+        <p className="text-sm text-muted-foreground mb-4">{getNoticeMessage(notice)}</p>
         
-        {notice.attachments.length > 0 && (
+        {notice.attachments && notice.attachments.length > 0 && (
           <div className="mb-3">
             <div className="flex items-center space-x-1 mb-2">
               <Paperclip className="h-3 w-3 text-muted-foreground" />
-              <span className="text-xs text-muted-foreground">Attachments</span>
+              <span className="text-xs text-muted-foreground">{t('notices.attachments')}</span>
             </div>
-            {notice.attachments.map((attachment, index) => (
+            {notice.attachments.map((attachment: string, index: number) => (
               <Badge key={index} variant="outline" className="text-xs mr-1">
                 {attachment}
               </Badge>
@@ -164,7 +184,7 @@ export const NoticesSection = ({ onNoticeClick }: NoticesSectionProps) => {
         <div className="space-y-1 text-xs text-muted-foreground mb-4">
           <div className="flex items-center space-x-1">
             <User className="h-3 w-3" />
-            <span>{notice.author} • {notice.department}</span>
+            <span>{t(notice.authorKey)} • {t(notice.departmentKey)}</span>
           </div>
           <div className="flex items-center space-x-1">
             <Calendar className="h-3 w-3" />
@@ -180,7 +200,7 @@ export const NoticesSection = ({ onNoticeClick }: NoticesSectionProps) => {
               onClick={() => onNoticeClick(notice.id)}
               className="flex-1"
             >
-              View Details
+              {t('notices.button.view.details')}
             </Button>
             {!notice.isRead && (
               <Button 
@@ -189,7 +209,7 @@ export const NoticesSection = ({ onNoticeClick }: NoticesSectionProps) => {
                 onClick={() => handleMarkAsRead(notice.id)}
               >
                 <Check className="h-3 w-3 mr-1" />
-                Mark Read
+                {t('notices.button.mark.read')}
               </Button>
             )}
           </div>
@@ -203,33 +223,33 @@ export const NoticesSection = ({ onNoticeClick }: NoticesSectionProps) => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-semibold">Notices</h2>
-          <p className="text-muted-foreground">Important announcements and updates</p>
+          <h2 className="text-2xl font-semibold">{t('notices.title')}</h2>
+          <p className="text-muted-foreground">{t('notices.description')}</p>
         </div>
         <Dialog open={isComposeOpen} onOpenChange={setIsComposeOpen}>
           <DialogTrigger asChild>
             <Button>
               <Plus className="h-4 w-4 mr-2" />
-              Compose Notice
+              {t('notices.button.compose')}
             </Button>
           </DialogTrigger>
           <DialogContent className="max-w-2xl">
             <DialogHeader>
-              <DialogTitle>Compose New Notice</DialogTitle>
+              <DialogTitle>{t('notices.compose.title')}</DialogTitle>
             </DialogHeader>
             <div className="space-y-4">
               <div>
-                <label className="text-sm font-medium">Title</label>
+                <label className="text-sm font-medium">{t('notices.compose.form.title')}</label>
                 <Input
-                  placeholder="Enter notice title..."
+                  placeholder={t('notices.compose.form.title.placeholder')}
                   value={composeForm.title}
                   onChange={(e) => setComposeForm(prev => ({ ...prev, title: e.target.value }))}
                 />
               </div>
               <div>
-                <label className="text-sm font-medium">Message</label>
+                <label className="text-sm font-medium">{t('notices.compose.form.message')}</label>
                 <Textarea
-                  placeholder="Enter notice message..."
+                  placeholder={t('notices.compose.form.message.placeholder')}
                   rows={4}
                   value={composeForm.message}
                   onChange={(e) => setComposeForm(prev => ({ ...prev, message: e.target.value }))}
@@ -237,7 +257,7 @@ export const NoticesSection = ({ onNoticeClick }: NoticesSectionProps) => {
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="text-sm font-medium">Priority</label>
+                  <label className="text-sm font-medium">{t('notices.compose.form.priority')}</label>
                   <Select 
                     value={composeForm.priority} 
                     onValueChange={(value) => setComposeForm(prev => ({ ...prev, priority: value }))}
@@ -246,14 +266,14 @@ export const NoticesSection = ({ onNoticeClick }: NoticesSectionProps) => {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="normal">Normal</SelectItem>
-                      <SelectItem value="high">High</SelectItem>
-                      <SelectItem value="urgent">Urgent</SelectItem>
+                      <SelectItem value="normal">{t('notices.priority.normal')}</SelectItem>
+                      <SelectItem value="high">{t('notices.priority.high')}</SelectItem>
+                      <SelectItem value="urgent">{t('notices.priority.urgent')}</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
                 <div>
-                  <label className="text-sm font-medium">Department</label>
+                  <label className="text-sm font-medium">{t('notices.compose.form.department')}</label>
                   <Select 
                     value={composeForm.department} 
                     onValueChange={(value) => setComposeForm(prev => ({ ...prev, department: value }))}
@@ -262,8 +282,8 @@ export const NoticesSection = ({ onNoticeClick }: NoticesSectionProps) => {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      {departments.map((dept) => (
-                        <SelectItem key={dept} value={dept}>{dept}</SelectItem>
+                      {departmentsData.map((dept) => (
+                        <SelectItem key={dept.key} value={dept.key}>{t(dept.labelKey)}</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
@@ -271,13 +291,13 @@ export const NoticesSection = ({ onNoticeClick }: NoticesSectionProps) => {
               </div>
               <div className="flex justify-end space-x-2">
                 <Button variant="outline" onClick={() => setIsComposeOpen(false)}>
-                  Cancel
+                  {t('common.cancel')}
                 </Button>
                 <Button 
                   onClick={handleComposeNotice}
                   disabled={!composeForm.title || !composeForm.message}
                 >
-                  Publish Notice
+                  {t('notices.button.publish')}
                 </Button>
               </div>
             </div>
@@ -285,13 +305,13 @@ export const NoticesSection = ({ onNoticeClick }: NoticesSectionProps) => {
         </Dialog>
       </div>
 
-      {/* Top 3 Critical Notices */}
+      {/* Critical Notices */}
       {unreadNotices.filter(n => n.priority === "urgent").length > 0 && (
         <Card className="border-destructive bg-destructive/5">
           <CardHeader>
             <CardTitle className="text-destructive flex items-center">
               <Bell className="h-4 w-4 mr-2" />
-              Critical Notices
+              {t('notices.critical.title')}
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -299,12 +319,16 @@ export const NoticesSection = ({ onNoticeClick }: NoticesSectionProps) => {
               {unreadNotices.filter(n => n.priority === "urgent").slice(0, 3).map((notice) => (
                 <div key={notice.id} className="flex items-center justify-between p-3 bg-background rounded-lg">
                   <div>
-                    <h4 className="font-medium text-sm">{notice.title}</h4>
-                    <p className="text-xs text-muted-foreground">{notice.department}</p>
+                    <h4 className="font-medium text-sm">{getNoticeTitle(notice)}</h4>
+                    <p className="text-xs text-muted-foreground">{t(notice.departmentKey)}</p>
                   </div>
                   <div className="flex space-x-2">
-                    <Button size="sm" onClick={() => onNoticeClick(notice.id)}>View</Button>
-                    <Button variant="outline" size="sm" onClick={() => handleMarkAsRead(notice.id)}>Mark Read</Button>
+                    <Button size="sm" onClick={() => onNoticeClick(notice.id)}>
+                      {t('notices.button.view')}
+                    </Button>
+                    <Button variant="outline" size="sm" onClick={() => handleMarkAsRead(notice.id)}>
+                      {t('notices.button.mark.read')}
+                    </Button>
                   </div>
                 </div>
               ))}
@@ -315,72 +339,74 @@ export const NoticesSection = ({ onNoticeClick }: NoticesSectionProps) => {
 
       {/* Filter Bar */}
       <div className="flex space-x-4">
-        <Select value={composeForm.department} onValueChange={(value) => setComposeForm(prev => ({ ...prev, department: value }))}>
-          <SelectTrigger className="w-40">
+        <Select value={filterDepartment} onValueChange={setFilterDepartment}>
+          <SelectTrigger className="w-48">
             <Filter className="h-4 w-4 mr-2" />
-            <SelectValue placeholder="All Departments" />
+            <SelectValue placeholder={t('notices.filter.department')} />
           </SelectTrigger>
           <SelectContent>
-            {departments.map((dept) => (
-              <SelectItem key={dept} value={dept}>{dept}</SelectItem>
+            {departmentsData.map((dept) => (
+              <SelectItem key={dept.key} value={dept.key}>{t(dept.labelKey)}</SelectItem>
             ))}
           </SelectContent>
         </Select>
-        <Select value={composeForm.priority} onValueChange={(value) => setComposeForm(prev => ({ ...prev, priority: value }))}>
-          <SelectTrigger className="w-32">
-            <SelectValue placeholder="All Priority" />
+        <Select value={filterPriority} onValueChange={setFilterPriority}>
+          <SelectTrigger className="w-40">
+            <SelectValue placeholder={t('notices.filter.priority')} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All Priority</SelectItem>
-            <SelectItem value="urgent">Urgent</SelectItem>
-            <SelectItem value="high">High</SelectItem>
-            <SelectItem value="normal">Normal</SelectItem>
+            <SelectItem value="all">{t('notices.priority.all')}</SelectItem>
+            <SelectItem value="urgent">{t('notices.priority.urgent')}</SelectItem>
+            <SelectItem value="high">{t('notices.priority.high')}</SelectItem>
+            <SelectItem value="normal">{t('notices.priority.normal')}</SelectItem>
           </SelectContent>
         </Select>
       </div>
 
       {/* Notice Cards */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        {notices.map((notice) => (
+        {filteredNotices.map((notice) => (
           <Card key={notice.id} className={`hover:shadow-sm transition-all ${!notice.isRead ? 'border-l-4 border-l-primary' : ''}`}>
             <CardContent className="p-4">
               <div className="flex items-start justify-between mb-3">
                 <div className="flex items-center space-x-2">
                   <Badge variant={getPriorityColor(notice.priority)} className="text-xs">
-                    {notice.priority.toUpperCase()}
+                    {t(`notices.priority.${notice.priority}`).toUpperCase()}
                   </Badge>
-                  <h3 className="font-medium">{notice.title}</h3>
-                  {!notice.isRead && <Badge variant="outline" className="text-xs">New</Badge>}
+                  <h3 className="font-medium">{getNoticeTitle(notice)}</h3>
+                  {!notice.isRead && <Badge variant="outline" className="text-xs">{t('notices.badge.new')}</Badge>}
                 </div>
               </div>
               
-              <p className="text-sm text-muted-foreground mb-3 line-clamp-2">{notice.message}</p>
+              <p className="text-sm text-muted-foreground mb-3 line-clamp-2">{getNoticeMessage(notice)}</p>
               
               <div className="flex items-center justify-between text-xs text-muted-foreground mb-3">
-                <span>{notice.department}</span>
+                <span>{t(notice.departmentKey)}</span>
                 <span>{new Date(notice.timestamp).toLocaleDateString()}</span>
               </div>
               
               <div className="flex space-x-2">
-                <Button size="sm" onClick={() => onNoticeClick(notice.id)}>View Details</Button>
+                <Button size="sm" onClick={() => onNoticeClick(notice.id)}>
+                  {t('notices.button.view.details')}
+                </Button>
                 {!notice.isRead && (
                   <Button variant="outline" size="sm" onClick={() => handleMarkAsRead(notice.id)}>
-                    Mark Read
+                    {t('notices.button.mark.read')}
                   </Button>
                 )}
-                <Button variant="outline" size="sm">Share</Button>
-                <Button variant="outline" size="sm">Archive</Button>
+                <Button variant="outline" size="sm">{t('notices.button.share')}</Button>
+                <Button variant="outline" size="sm">{t('notices.button.archive')}</Button>
               </div>
             </CardContent>
           </Card>
         ))}
       </div>
 
-      {notices.length === 0 && (
+      {filteredNotices.length === 0 && (
         <div className="text-center py-12">
           <Bell className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-          <h3 className="text-lg font-medium mb-2">No notices</h3>
-          <p className="text-muted-foreground">No notices have been posted yet</p>
+          <h3 className="text-lg font-medium mb-2">{t('notices.empty.title')}</h3>
+          <p className="text-muted-foreground">{t('notices.empty.description')}</p>
         </div>
       )}
     </div>

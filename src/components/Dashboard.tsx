@@ -1,3 +1,5 @@
+
+
 import { useState } from "react";
 import { 
   FileText, 
@@ -18,6 +20,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
+import { useTranslation } from "../contexts/TranslationContext"; // Import the translation hook
 
 interface DashboardProps {
   onDocumentClick: (docId: string) => void;
@@ -27,94 +30,95 @@ interface DashboardProps {
   setActiveSection?: (section: string) => void;
 }
 
-// Mock data
-const recentDocuments = [
-  {
-    id: "1",
-    title: "Q3 Financial Report 2024",
-    type: "PDF",
-    uploadedAt: "2 hours ago",
-    summary: "Quarterly financial analysis showing 15% growth in revenue with detailed breakdown of departmental expenses...",
-    aiTags: ["Finance", "Report", "Q3"],
-    priority: "high",
-    hasReminders: true,
-    downloadCount: 23
-  },
-  {
-    id: "2", 
-    title: "Metro Project Timeline",
-    type: "DOCX",
-    uploadedAt: "5 hours ago",
-    summary: "Updated project timeline for Phase 2 metro construction with critical milestones and resource allocation...",
-    aiTags: ["Project", "Timeline", "Metro"],
-    priority: "medium",
-    hasReminders: false,
-    downloadCount: 12
-  },
-  {
-    id: "3",
-    title: "Safety Guidelines Update",
-    type: "PDF", 
-    uploadedAt: "1 day ago",
-    summary: "Enhanced safety protocols for construction sites including new equipment requirements and training schedules...",
-    aiTags: ["Safety", "Guidelines", "Construction"],
-    priority: "high",
-    hasReminders: true,
-    downloadCount: 45
-  }
-];
-
-const notices = [
-  {
-    id: "1",
-    title: "Important: Board Meeting Tomorrow",
-    message: "Monthly board meeting scheduled for 10:00 AM in Conference Room A",
-    priority: "high",
-    department: "Administration",
-    unread: true,
-    timestamp: "30 minutes ago"
-  },
-  {
-    id: "2",
-    title: "New Document Upload Policy",
-    message: "Updated guidelines for document classification and AI tagging",
-    priority: "medium", 
-    department: "IT",
-    unread: false,
-    timestamp: "2 hours ago"
-  }
-];
-
-const aiInsights = [
-  {
-    title: "Documents Processed Today",
-    value: "24",
-    change: "+12%",
-    icon: Brain
-  },
-  {
-    title: "AI Summaries Generated", 
-    value: "18",
-    change: "+8%",
-    icon: FileText
-  },
-  {
-    title: "Pending Reviews",
-    value: "5",
-    change: "-3%",
-    icon: Clock
-  }
-];
-
 export const Dashboard = ({ onDocumentClick, onUploadClick, onNoticeClick, onReminderClick, setActiveSection }: DashboardProps) => {
+  const { t } = useTranslation(); // Use translation hook
   const [autoModeEnabled, setAutoModeEnabled] = useState(true);
+
+  // Mock data - keeping the same structure but will use translated content in render
+  const recentDocuments = [
+    {
+      id: "1",
+      titleKey: "dashboard.documents.q3.report.title",
+      type: "PDF",
+      uploadedAt: "dashboard.time.hours.ago.2",
+      summaryKey: "dashboard.documents.q3.report.summary",
+      aiTags: ["dashboard.tags.finance", "dashboard.tags.report", "dashboard.tags.q3"],
+      priority: "high",
+      hasReminders: true,
+      downloadCount: 23
+    },
+    {
+      id: "2", 
+      titleKey: "dashboard.documents.metro.timeline.title",
+      type: "DOCX",
+      uploadedAt: "dashboard.time.hours.ago.5",
+      summaryKey: "dashboard.documents.metro.timeline.summary",
+      aiTags: ["dashboard.tags.project", "dashboard.tags.timeline", "dashboard.tags.metro"],
+      priority: "medium",
+      hasReminders: false,
+      downloadCount: 12
+    },
+    {
+      id: "3",
+      titleKey: "dashboard.documents.safety.guidelines.title",
+      type: "PDF", 
+      uploadedAt: "dashboard.time.day.ago.1",
+      summaryKey: "dashboard.documents.safety.guidelines.summary",
+      aiTags: ["dashboard.tags.safety", "dashboard.tags.guidelines", "dashboard.tags.construction"],
+      priority: "high",
+      hasReminders: true,
+      downloadCount: 45
+    }
+  ];
+
+  const notices = [
+    {
+      id: "1",
+      titleKey: "dashboard.notices.board.meeting.title",
+      messageKey: "dashboard.notices.board.meeting.message",
+      priority: "high",
+      departmentKey: "dashboard.departments.administration",
+      unread: true,
+      timestampKey: "dashboard.time.minutes.ago.30"
+    },
+    {
+      id: "2",
+      titleKey: "dashboard.notices.document.policy.title",
+      messageKey: "dashboard.notices.document.policy.message",
+      priority: "medium", 
+      departmentKey: "dashboard.departments.it",
+      unread: false,
+      timestampKey: "dashboard.time.hours.ago.2"
+    }
+  ];
+
+  const aiInsights = [
+    {
+      titleKey: "dashboard.insights.documents.processed",
+      value: "24",
+      change: "+12%",
+      icon: Brain
+    },
+    {
+      titleKey: "dashboard.insights.ai.summaries",
+      value: "18",
+      change: "+8%",
+      icon: FileText
+    },
+    {
+      titleKey: "dashboard.insights.pending.reviews",
+      value: "5",
+      change: "-3%",
+      icon: Clock
+    }
+  ];
 
   return (
     <div className="space-y-8 p-8 max-w-7xl mx-auto">
       {/* Clean Header Section */}
       <div className="text-center space-y-2">
-        <h1 className="text-4xl font-light text-foreground">Hello, Employee</h1>
-        <p className="text-muted-foreground text-lg">Today's overview at a glance</p>
+        <h1 className="text-4xl font-light text-foreground">{t('dashboard.welcome.title')}</h1>
+        <p className="text-muted-foreground text-lg">{t('dashboard.welcome.subtitle')}</p>
       </div>
 
       {/* Quick Action Cards - Simplified */}
@@ -126,8 +130,8 @@ export const Dashboard = ({ onDocumentClick, onUploadClick, onNoticeClick, onRem
                 <Upload className="h-6 w-6 text-primary" />
               </div>
               <div>
-                <p className="text-lg font-semibold text-foreground">Upload Document</p>
-                <p className="text-sm text-muted-foreground">Quick upload with AI processing</p>
+                <p className="text-lg font-semibold text-foreground">{t('dashboard.actions.upload.title')}</p>
+                <p className="text-sm text-muted-foreground">{t('dashboard.actions.upload.subtitle')}</p>
               </div>
             </div>
           </CardContent>
@@ -140,8 +144,8 @@ export const Dashboard = ({ onDocumentClick, onUploadClick, onNoticeClick, onRem
                 <Brain className="h-6 w-6 text-primary" />
               </div>
               <div>
-                <p className="text-lg font-semibold text-foreground">AI Features</p>
-                <p className="text-sm text-muted-foreground">Generate summaries & insights</p>
+                <p className="text-lg font-semibold text-foreground">{t('dashboard.actions.ai.title')}</p>
+                <p className="text-sm text-muted-foreground">{t('dashboard.actions.ai.subtitle')}</p>
               </div>
             </div>
           </CardContent>
@@ -154,8 +158,8 @@ export const Dashboard = ({ onDocumentClick, onUploadClick, onNoticeClick, onRem
                 <Clock className="h-6 w-6 text-primary" />
               </div>
               <div>
-                <p className="text-lg font-semibold text-foreground">Set Reminder</p>
-                <p className="text-sm text-muted-foreground">Create deadline alerts</p>
+                <p className="text-lg font-semibold text-foreground">{t('dashboard.actions.reminder.title')}</p>
+                <p className="text-sm text-muted-foreground">{t('dashboard.actions.reminder.subtitle')}</p>
               </div>
             </div>
           </CardContent>
@@ -167,7 +171,7 @@ export const Dashboard = ({ onDocumentClick, onUploadClick, onNoticeClick, onRem
         <CardHeader className="pb-4">
           <CardTitle className="flex items-center text-xl font-semibold">
             <Brain className="mr-3 h-6 w-6 text-primary" />
-            AI Insights - Critical Actions
+            {t('dashboard.insights.title')}
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -175,23 +179,23 @@ export const Dashboard = ({ onDocumentClick, onUploadClick, onNoticeClick, onRem
             <div className="p-4 rounded-lg bg-destructive/10 border border-destructive/20">
               <div className="flex items-center space-x-2 mb-2">
                 <AlertCircle className="h-4 w-4 text-destructive" />
-                <span className="text-sm font-medium text-destructive">Urgent Deadline</span>
+                <span className="text-sm font-medium text-destructive">{t('dashboard.alerts.urgent.title')}</span>
               </div>
-              <p className="text-xs text-muted-foreground">Q3 Board Report due tomorrow</p>
+              <p className="text-xs text-muted-foreground">{t('dashboard.alerts.urgent.message')}</p>
             </div>
             <div className="p-4 rounded-lg bg-warning/10 border border-warning/20">
               <div className="flex items-center space-x-2 mb-2">
                 <Clock className="h-4 w-4 text-warning" />
-                <span className="text-sm font-medium text-warning">Compliance Alert</span>
+                <span className="text-sm font-medium text-warning">{t('dashboard.alerts.compliance.title')}</span>
               </div>
-              <p className="text-xs text-muted-foreground">Safety audit documents pending</p>
+              <p className="text-xs text-muted-foreground">{t('dashboard.alerts.compliance.message')}</p>
             </div>
             <div className="p-4 rounded-lg bg-primary/10 border border-primary/20">
               <div className="flex items-center space-x-2 mb-2">
                 <Star className="h-4 w-4 text-primary" />
-                <span className="text-sm font-medium text-primary">High Priority</span>
+                <span className="text-sm font-medium text-primary">{t('dashboard.alerts.priority.title')}</span>
               </div>
-              <p className="text-xs text-muted-foreground">5 notices require attention</p>
+              <p className="text-xs text-muted-foreground">{t('dashboard.alerts.priority.message')}</p>
             </div>
           </div>
         </CardContent>
@@ -205,9 +209,9 @@ export const Dashboard = ({ onDocumentClick, onUploadClick, onNoticeClick, onRem
             <CardTitle className="flex items-center justify-between text-lg font-semibold">
               <span className="flex items-center">
                 <Bell className="mr-3 h-5 w-5 text-primary" />
-                Recent Notices
+                {t('dashboard.notices.title')}
               </span>
-              <Button variant="ghost" size="sm" className="text-xs">View All</Button>
+              <Button variant="ghost" size="sm" className="text-xs">{t('common.view.all')}</Button>
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
@@ -220,7 +224,7 @@ export const Dashboard = ({ onDocumentClick, onUploadClick, onNoticeClick, onRem
                 onClick={() => onNoticeClick(notice.id)}
               >
                 <div className="flex items-start justify-between mb-2">
-                  <h4 className="text-sm font-medium text-foreground">{notice.title}</h4>
+                  <h4 className="text-sm font-medium text-foreground">{t(notice.titleKey)}</h4>
                   <div className="flex items-center space-x-2">
                     {notice.priority === "high" && (
                       <div className="w-2 h-2 bg-destructive rounded-full" />
@@ -230,10 +234,10 @@ export const Dashboard = ({ onDocumentClick, onUploadClick, onNoticeClick, onRem
                     )}
                   </div>
                 </div>
-                <p className="text-xs text-muted-foreground mb-2">{notice.message}</p>
+                <p className="text-xs text-muted-foreground mb-2">{t(notice.messageKey)}</p>
                 <div className="flex items-center justify-between">
-                  <Badge variant="outline" className="text-xs border-0 bg-background/50">{notice.department}</Badge>
-                  <span className="text-xs text-muted-foreground">{notice.timestamp}</span>
+                  <Badge variant="outline" className="text-xs border-0 bg-background/50">{t(notice.departmentKey)}</Badge>
+                  <span className="text-xs text-muted-foreground">{t(notice.timestampKey)}</span>
                 </div>
               </div>
             ))}
@@ -246,9 +250,9 @@ export const Dashboard = ({ onDocumentClick, onUploadClick, onNoticeClick, onRem
             <CardTitle className="flex items-center justify-between text-lg font-semibold">
               <span className="flex items-center">
                 <FileText className="mr-3 h-5 w-5 text-primary" />
-                Recent Documents
+                {t('dashboard.documents.title')}
               </span>
-              <Button variant="ghost" size="sm" className="text-xs">View All</Button>
+              <Button variant="ghost" size="sm" className="text-xs">{t('common.view.all')}</Button>
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
@@ -259,7 +263,7 @@ export const Dashboard = ({ onDocumentClick, onUploadClick, onNoticeClick, onRem
                 onClick={() => onDocumentClick(doc.id)}
               >
                 <div className="flex items-start justify-between mb-2">
-                  <h4 className="text-sm font-medium text-foreground truncate">{doc.title}</h4>
+                  <h4 className="text-sm font-medium text-foreground truncate">{t(doc.titleKey)}</h4>
                   <div className="flex items-center space-x-2">
                     {doc.priority === "high" && (
                       <div className="w-2 h-2 bg-destructive rounded-full" />
@@ -270,17 +274,16 @@ export const Dashboard = ({ onDocumentClick, onUploadClick, onNoticeClick, onRem
                 <div className="flex items-center space-x-2 mb-2">
                   {doc.aiTags.slice(0, 2).map((tag, index) => (
                     <Badge key={index} variant="secondary" className="text-xs border-0 bg-primary/10 text-primary">
-                      {tag}
+                      {t(tag)}
                     </Badge>
                   ))}
                 </div>
-                <span className="text-xs text-muted-foreground">{doc.uploadedAt}</span>
+                <span className="text-xs text-muted-foreground">{t(doc.uploadedAt)}</span>
               </div>
             ))}
           </CardContent>
         </Card>
       </div>
-
     </div>
   );
 };

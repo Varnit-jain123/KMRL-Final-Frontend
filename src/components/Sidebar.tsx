@@ -1,3 +1,5 @@
+
+
 import { useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import {
@@ -21,6 +23,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { useTranslation } from "../contexts/TranslationContext";
 
 interface SidebarProps {
   onNavigate: (section: string) => void;
@@ -34,69 +37,70 @@ interface SidebarProps {
   };
 }
 
-const menuItems = [
-  {
-    section: "dashboard",
-    label: "Dashboard",
-    icon: Home,
-    description: "Overview & insights"
-  },
-  {
-    section: "documents",
-    label: "Documents",
-    icon: FileText,
-    description: "Browse & manage",
-    hasUrgent: true
-  },
-  {
-    section: "ai-features",
-    label: "AI Features",
-    icon: Brain,
-    description: "Smart automation"
-  },
-  {
-    section: "notices",
-    label: "Notices",
-    icon: Bell,
-    description: "Announcements",
-    hasUrgent: true
-  },
-  {
-    section: "reminders",
-    label: "Reminders",
-    icon: Clock,
-    description: "Tasks & deadlines",
-    hasUrgent: true
-  },
-  {
-    section: "departments",
-    label: "Departments",
-    icon: Users,
-    description: "Team contacts"
-  },
-  {
-    section: "history",
-    label: "History",
-    icon: History,
-    description: "Activity log"
-  },
-  {
-    section: "help",
-    label: "Help & Support",
-    icon: HelpCircle,
-    description: "Get assistance"
-  },
-  {
-    section: "settings",
-    label: "Settings",
-    icon: Settings,
-    description: "Security & preferences"
-  }
-];
-
 export const Sidebar = ({ onNavigate, activeSection, urgentCount, unreadCounts = {} }: SidebarProps) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const location = useLocation();
+  const { t } = useTranslation();
+
+  const menuItems = [
+    {
+      section: "dashboard",
+      labelKey: "sidebar.dashboard.title",
+      icon: Home,
+      descriptionKey: "sidebar.dashboard.description"
+    },
+    {
+      section: "documents",
+      labelKey: "sidebar.documents.title",
+      icon: FileText,
+      descriptionKey: "sidebar.documents.description",
+      hasUrgent: true
+    },
+    {
+      section: "ai-features",
+      labelKey: "sidebar.ai.title",
+      icon: Brain,
+      descriptionKey: "sidebar.ai.description"
+    },
+    {
+      section: "notices",
+      labelKey: "sidebar.notices.title",
+      icon: Bell,
+      descriptionKey: "sidebar.notices.description",
+      hasUrgent: true
+    },
+    {
+      section: "reminders",
+      labelKey: "sidebar.reminders.title",
+      icon: Clock,
+      descriptionKey: "sidebar.reminders.description",
+      hasUrgent: true
+    },
+    {
+      section: "departments",
+      labelKey: "sidebar.departments.title",
+      icon: Users,
+      descriptionKey: "sidebar.departments.description"
+    },
+    {
+      section: "history",
+      labelKey: "sidebar.history.title",
+      icon: History,
+      descriptionKey: "sidebar.history.description"
+    },
+    {
+      section: "help",
+      labelKey: "sidebar.help.title",
+      icon: HelpCircle,
+      descriptionKey: "sidebar.help.description"
+    },
+    {
+      section: "settings",
+      labelKey: "sidebar.settings.title",
+      icon: Settings,
+      descriptionKey: "sidebar.settings.description"
+    }
+  ];
 
   const isActive = (section: string) => activeSection === section;
 
@@ -112,7 +116,7 @@ export const Sidebar = ({ onNavigate, activeSection, urgentCount, unreadCounts =
       <div className="p-6 border-b border-sidebar-border/50">
         <div className="flex items-center justify-between">
           {!isCollapsed && (
-            <h2 className="text-sm font-medium text-sidebar-foreground/70 uppercase tracking-wider">Menu</h2>
+            <h2 className="text-sm font-medium text-sidebar-foreground/70 uppercase tracking-wider">{t('sidebar.menu')}</h2>
           )}
           <Button
             variant="ghost"
@@ -135,11 +139,11 @@ export const Sidebar = ({ onNavigate, activeSection, urgentCount, unreadCounts =
           <div className="flex items-center space-x-2">
             <AlertTriangle className="h-4 w-4 text-destructive" />
             <span className="text-sm font-medium text-destructive">
-              {urgentCount} Urgent Items
+              {urgentCount} {t('sidebar.urgent.items')}
             </span>
           </div>
           <p className="text-xs text-destructive/80 mt-1">
-            Requires immediate attention
+            {t('sidebar.urgent.attention')}
           </p>
         </div>
       )}
@@ -172,7 +176,7 @@ export const Sidebar = ({ onNavigate, activeSection, urgentCount, unreadCounts =
                   {!isCollapsed && (
                     <div className="flex-1 text-left">
                       <div className="flex items-center justify-between">
-                        <span className="font-medium text-sm">{item.label}</span>
+                        <span className="font-medium text-sm">{t(item.labelKey)}</span>
                         {hasCount && (
                           <Badge variant={active ? "secondary" : "default"} className="text-xs h-5 px-2">
                             {sectionCount}
@@ -180,7 +184,7 @@ export const Sidebar = ({ onNavigate, activeSection, urgentCount, unreadCounts =
                         )}
                       </div>
                       <p className={`text-xs mt-0.5 ${active ? 'text-primary-foreground/80' : 'text-sidebar-foreground/50'}`}>
-                        {item.description}
+                        {t(item.descriptionKey)}
                       </p>
                     </div>
                   )}
@@ -202,8 +206,8 @@ export const Sidebar = ({ onNavigate, activeSection, urgentCount, unreadCounts =
                     {buttonElement}
                   </TooltipTrigger>
                   <TooltipContent side="right" className="font-medium">
-                    <p>{item.label}</p>
-                    <p className="text-xs text-muted-foreground">{item.description}</p>
+                    <p>{t(item.labelKey)}</p>
+                    <p className="text-xs text-muted-foreground">{t(item.descriptionKey)}</p>
                   </TooltipContent>
                 </Tooltip>
               ) : (
@@ -218,8 +222,8 @@ export const Sidebar = ({ onNavigate, activeSection, urgentCount, unreadCounts =
       <div className="p-6 border-t border-sidebar-border/50">
         {!isCollapsed && (
           <div className="text-xs text-sidebar-foreground/40 space-y-1">
-            <p className="font-medium">KMRL Platform</p>
-            <p>© 2024 Kochi Metro</p>
+            <p className="font-medium">{t('sidebar.footer.platform')}</p>
+            <p>{t('sidebar.footer.copyright')}</p>
           </div>
         )}
       </div>

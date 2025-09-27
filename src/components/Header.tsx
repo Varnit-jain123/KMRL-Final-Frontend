@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Bell, Search, Settings, User, Moon, Sun, Globe, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -12,6 +13,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useTheme } from "next-themes";
 import { useToast } from "@/hooks/use-toast";
+import { useTranslation } from "../contexts/TranslationContext";
 import kmrlLogo from "@/assets/kmrl-logo.png";
 
 interface HeaderProps {
@@ -26,34 +28,37 @@ interface HeaderProps {
 
 export const Header = ({ onSearchOpen, onNotificationsOpen, onSettingsOpen, onDashboardClick, user, onLogout, unreadNotificationsCount = 0 }: HeaderProps) => {
   const { theme, setTheme } = useTheme();
-  const [language, setLanguage] = useState("English");
+  const { language, setLanguage, t } = useTranslation();
   const { toast } = useToast();
   
   // Use passed notification count
   const notificationCount = unreadNotificationsCount;
 
   const languages = [
-    { code: "en", name: "English", available: true },
-    { code: "hi", name: "Hindi", available: false },
-    { code: "ml", name: "Malayalam", available: true },
-    { code: "kn", name: "Kannada", available: false }
+    { code: "en", name: t('header.language.english'), available: true },
+    { code: "hi", name: t('header.language.hindi'), available: false },
+    { code: "ml", name: t('header.language.malayalam'), available: true },
+    { code: "kn", name: t('header.language.kannada'), available: false }
   ];
 
-  const handleLanguageChange = (languageName: string, available: boolean) => {
+  const handleLanguageChange = (languageCode: string, languageName: string, available: boolean) => {
     if (available) {
-      setLanguage(languageName);
+      setLanguage(languageCode);
       toast({
-        title: "Language changed",
-        description: `Interface language set to ${languageName}`,
+        title: t('header.language.changed'),
+        description: `${t('header.language.changed.desc')} ${languageName}`,
       });
     } else {
       toast({
-        title: "Coming Soon",
-        description: `${languageName} translation is not available yet`,
+        title: t('header.language.coming.soon'),
+        description: `${languageName} ${t('header.language.not.available')}`,
         variant: "destructive",
       });
     }
   };
+
+  // Get current language display name
+  const currentLanguageName = languages.find(lang => lang.code === language)?.name || t('header.language.english');
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/50 bg-background/80 backdrop-blur-lg supports-[backdrop-filter]:bg-background/60">
@@ -69,8 +74,8 @@ export const Header = ({ onSearchOpen, onNotificationsOpen, onSettingsOpen, onDa
             className="w-10 h-10 object-contain"
           />
           <div className="flex flex-col">
-            <span className="text-xl font-bold text-foreground">KMRL</span>
-            <span className="text-xs text-muted-foreground font-medium">Document Platform</span>
+            <span className="text-xl font-bold text-foreground">{t('brand.name')}</span>
+            <span className="text-xs text-muted-foreground font-medium">{t('brand.subtitle')}</span>
           </div>
         </div>
 
@@ -79,17 +84,17 @@ export const Header = ({ onSearchOpen, onNotificationsOpen, onSettingsOpen, onDa
           <div className="relative">
             <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-muted-foreground h-5 w-5" />
             <Input
-              placeholder="Search documents, ask AI questions, or use voice commands..."
+              placeholder={t('header.search.placeholder')}
               className="pl-12 h-12 border-0 bg-muted/30 rounded-xl text-base placeholder:text-muted-foreground/70 focus:bg-background focus:shadow-lg transition-all duration-200"
               onClick={onSearchOpen}
               readOnly
             />
             <div className="absolute right-4 top-1/2 transform -translate-y-1/2 flex items-center space-x-2">
               <Badge variant="secondary" className="text-xs bg-primary/10 text-primary border-0">
-                Voice
+                {t('header.badges.voice')}
               </Badge>
               <Badge variant="secondary" className="text-xs bg-primary/10 text-primary border-0">
-                AI
+                {t('header.badges.ai')}
               </Badge>
             </div>
           </div>
@@ -106,7 +111,7 @@ export const Header = ({ onSearchOpen, onNotificationsOpen, onSettingsOpen, onDa
                 className="text-sm font-medium rounded-lg hover:bg-muted/50"
               >
                 <Globe className="h-4 w-4 mr-1" />
-                {language}
+                {currentLanguageName}
                 <ChevronDown className="h-3 w-3 ml-1" />
               </Button>
             </DropdownMenuTrigger>
@@ -114,7 +119,7 @@ export const Header = ({ onSearchOpen, onNotificationsOpen, onSettingsOpen, onDa
               {languages.map((lang) => (
                 <DropdownMenuItem
                   key={lang.code}
-                  onClick={() => handleLanguageChange(lang.name, lang.available)}
+                  onClick={() => handleLanguageChange(lang.code, lang.name, lang.available)}
                   className={`py-2 px-3 ${!lang.available ? 'opacity-50' : ''}`}
                   disabled={!lang.available}
                 >
@@ -123,7 +128,7 @@ export const Header = ({ onSearchOpen, onNotificationsOpen, onSettingsOpen, onDa
                   {!lang.available && (
                     <span className="text-xs text-muted-foreground">Soon</span>
                   )}
-                  {language === lang.name && lang.available && (
+                  {language === lang.code && lang.available && (
                     <span className="text-primary">✓</span>
                   )}
                 </DropdownMenuItem>
@@ -169,17 +174,17 @@ export const Header = ({ onSearchOpen, onNotificationsOpen, onSettingsOpen, onDa
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-64 shadow-lg border-0">
               <div className="px-4 py-3 border-b border-border/50">
-                <p className="text-sm font-medium">{user?.name || "KMRL Employee"}</p>
-                <p className="text-xs text-muted-foreground">{user?.email || "employee@kmrl.kerala.gov.in"}</p>
-                <p className="text-xs text-muted-foreground mt-1">{user?.department || "Department"} • {user?.role || "Employee"}</p>
+                <p className="text-sm font-medium">{user?.name || t('header.user.default.name')}</p>
+                <p className="text-xs text-muted-foreground">{user?.email || t('header.user.default.email')}</p>
+                <p className="text-xs text-muted-foreground mt-1">{user?.department || t('header.user.default.department')} • {user?.role || t('header.user.default.role')}</p>
               </div>
               <DropdownMenuItem onClick={onSettingsOpen} className="py-3 px-4">
                 <Settings className="mr-3 h-4 w-4" />
-                Settings & Security
+                {t('header.user.settings')}
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem className="text-destructive py-3 px-4" onClick={onLogout}>
-                Sign Out
+                {t('header.user.signout')}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

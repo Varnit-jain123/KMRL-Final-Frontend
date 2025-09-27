@@ -6,23 +6,24 @@ import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
+import { useTranslation } from "../contexts/TranslationContext";
 
 interface DepartmentsSectionProps {}
 
-// Mock departments data
+// Mock departments data with translation keys
 const departments = [
   {
     id: "dept1",
-    name: "Engineering Department",
-    description: "Responsible for metro system design, construction, and technical operations",
-    head: "Dr. Rajesh Kumar",
-    location: "Technical Building - Floor 3",
+    nameKey: "departments.engineering.name",
+    descriptionKey: "departments.engineering.description",
+    headKey: "departments.engineering.head",
+    locationKey: "departments.engineering.location",
     memberCount: 45,
     members: [
       {
         id: "emp1",
-        name: "Dr. Rajesh Kumar",
-        role: "Chief Engineer",
+        nameKey: "departments.engineering.members.head.name",
+        roleKey: "departments.engineering.members.head.role",
         email: "rajesh.kumar@kmrl.com",
         phone: "+91 9876543210",
         avatar: "",
@@ -30,8 +31,8 @@ const departments = [
       },
       {
         id: "emp2", 
-        name: "Priya Nair",
-        role: "Senior Design Engineer",
+        nameKey: "departments.engineering.members.senior.name",
+        roleKey: "departments.engineering.members.senior.role",
         email: "priya.nair@kmrl.com",
         phone: "+91 9876543211",
         avatar: "",
@@ -39,8 +40,8 @@ const departments = [
       },
       {
         id: "emp3",
-        name: "Arjun Menon",
-        role: "Project Engineer",
+        nameKey: "departments.engineering.members.project.name",
+        roleKey: "departments.engineering.members.project.role",
         email: "arjun.menon@kmrl.com", 
         phone: "+91 9876543212",
         avatar: "",
@@ -48,8 +49,8 @@ const departments = [
       },
       {
         id: "emp4",
-        name: "Deepika Sharma",
-        role: "Quality Engineer",
+        nameKey: "departments.engineering.members.quality.name",
+        roleKey: "departments.engineering.members.quality.role",
         email: "deepika.sharma@kmrl.com",
         phone: "+91 9876543213", 
         avatar: "",
@@ -59,16 +60,16 @@ const departments = [
   },
   {
     id: "dept2",
-    name: "Safety Department",
-    description: "Ensures compliance with safety standards and protocols across all operations",
-    head: "Suresh Pillai",
-    location: "Safety Building - Floor 2",
+    nameKey: "departments.safety.name",
+    descriptionKey: "departments.safety.description",
+    headKey: "departments.safety.head",
+    locationKey: "departments.safety.location",
     memberCount: 28,
     members: [
       {
         id: "emp5",
-        name: "Suresh Pillai",
-        role: "Safety Director",
+        nameKey: "departments.safety.members.director.name",
+        roleKey: "departments.safety.members.director.role",
         email: "suresh.pillai@kmrl.com",
         phone: "+91 9876543214",
         avatar: "",
@@ -76,8 +77,8 @@ const departments = [
       },
       {
         id: "emp6",
-        name: "Kavitha Radhakrishnan",
-        role: "Safety Inspector",
+        nameKey: "departments.safety.members.inspector.name",
+        roleKey: "departments.safety.members.inspector.role",
         email: "kavitha.r@kmrl.com",
         phone: "+91 9876543215",
         avatar: "",
@@ -85,8 +86,8 @@ const departments = [
       },
       {
         id: "emp7",
-        name: "Ravi Chandran",
-        role: "Safety Coordinator",
+        nameKey: "departments.safety.members.coordinator.name",
+        roleKey: "departments.safety.members.coordinator.role",
         email: "ravi.chandran@kmrl.com",
         phone: "+91 9876543216",
         avatar: "",
@@ -96,16 +97,16 @@ const departments = [
   },
   {
     id: "dept3",
-    name: "Finance Department", 
-    description: "Manages budgets, financial planning, and resource allocation",
-    head: "Lakshmi Nambiar",
-    location: "Admin Building - Floor 4",
+    nameKey: "departments.finance.name",
+    descriptionKey: "departments.finance.description",
+    headKey: "departments.finance.head",
+    locationKey: "departments.finance.location",
     memberCount: 22,
     members: [
       {
         id: "emp8",
-        name: "Lakshmi Nambiar",
-        role: "Finance Director",
+        nameKey: "departments.finance.members.director.name",
+        roleKey: "departments.finance.members.director.role",
         email: "lakshmi.nambiar@kmrl.com",
         phone: "+91 9876543217",
         avatar: "",
@@ -113,8 +114,8 @@ const departments = [
       },
       {
         id: "emp9",
-        name: "Vinod Thomas",
-        role: "Senior Accountant",
+        nameKey: "departments.finance.members.accountant.name",
+        roleKey: "departments.finance.members.accountant.role",
         email: "vinod.thomas@kmrl.com",
         phone: "+91 9876543218",
         avatar: "",
@@ -122,8 +123,8 @@ const departments = [
       },
       {
         id: "emp10",
-        name: "Anjali Krishnan",
-        role: "Budget Analyst",
+        nameKey: "departments.finance.members.analyst.name",
+        roleKey: "departments.finance.members.analyst.role",
         email: "anjali.krishnan@kmrl.com",
         phone: "+91 9876543219",
         avatar: "",
@@ -133,16 +134,16 @@ const departments = [
   },
   {
     id: "dept4",
-    name: "HR Department",
-    description: "Human resources, employee relations, and organizational development",
-    head: "Meera Shenoy",
-    location: "Admin Building - Floor 2",
+    nameKey: "departments.hr.name",
+    descriptionKey: "departments.hr.description",
+    headKey: "departments.hr.head",
+    locationKey: "departments.hr.location",
     memberCount: 18,
     members: [
       {
         id: "emp11",
-        name: "Meera Shenoy",
-        role: "HR Director",
+        nameKey: "departments.hr.members.director.name",
+        roleKey: "departments.hr.members.director.role",
         email: "meera.shenoy@kmrl.com",
         phone: "+91 9876543220",
         avatar: "",
@@ -150,8 +151,8 @@ const departments = [
       },
       {
         id: "emp12",
-        name: "Arun Kumar",
-        role: "HR Manager",
+        nameKey: "departments.hr.members.manager.name",
+        roleKey: "departments.hr.members.manager.role",
         email: "arun.kumar@kmrl.com",
         phone: "+91 9876543221",
         avatar: "",
@@ -161,16 +162,16 @@ const departments = [
   },
   {
     id: "dept5",
-    name: "IT Department",
-    description: "Information technology infrastructure and digital solutions",
-    head: "Kiran Raj",
-    location: "Tech Center - Floor 1",
+    nameKey: "departments.it.name",
+    descriptionKey: "departments.it.description",
+    headKey: "departments.it.head",
+    locationKey: "departments.it.location",
     memberCount: 35,
     members: [
       {
         id: "emp13",
-        name: "Kiran Raj",
-        role: "IT Director", 
+        nameKey: "departments.it.members.director.name",
+        roleKey: "departments.it.members.director.role",
         email: "kiran.raj@kmrl.com",
         phone: "+91 9876543222",
         avatar: "",
@@ -178,8 +179,8 @@ const departments = [
       },
       {
         id: "emp14",
-        name: "Rohit Varma",
-        role: "System Administrator",
+        nameKey: "departments.it.members.admin.name",
+        roleKey: "departments.it.members.admin.role",
         email: "rohit.varma@kmrl.com",
         phone: "+91 9876543223",
         avatar: "",
@@ -187,8 +188,8 @@ const departments = [
       },
       {
         id: "emp15",
-        name: "Sita Devi",
-        role: "Software Developer",
+        nameKey: "departments.it.members.developer.name",
+        roleKey: "departments.it.members.developer.role",
         email: "sita.devi@kmrl.com",
         phone: "+91 9876543224",
         avatar: "",
@@ -198,16 +199,16 @@ const departments = [
   },
   {
     id: "dept6",
-    name: "Operations Department",
-    description: "Daily metro operations, scheduling, and passenger services",
-    head: "Mohan Das",
-    location: "Operations Center - Floor 1",
+    nameKey: "departments.operations.name",
+    descriptionKey: "departments.operations.description",
+    headKey: "departments.operations.head",
+    locationKey: "departments.operations.location",
     memberCount: 120,
     members: [
       {
         id: "emp16",
-        name: "Mohan Das",
-        role: "Operations Director",
+        nameKey: "departments.operations.members.director.name",
+        roleKey: "departments.operations.members.director.role",
         email: "mohan.das@kmrl.com", 
         phone: "+91 9876543225",
         avatar: "",
@@ -215,8 +216,8 @@ const departments = [
       },
       {
         id: "emp17",
-        name: "Geetha Nair",
-        role: "Operations Manager",
+        nameKey: "departments.operations.members.manager.name",
+        roleKey: "departments.operations.members.manager.role",
         email: "geetha.nair@kmrl.com",
         phone: "+91 9876543226",
         avatar: "",
@@ -224,8 +225,8 @@ const departments = [
       },
       {
         id: "emp18",
-        name: "Shankar Menon",
-        role: "Station Master",
+        nameKey: "departments.operations.members.station.name",
+        roleKey: "departments.operations.members.station.role",
         email: "shankar.menon@kmrl.com",
         phone: "+91 9876543227",
         avatar: "",
@@ -236,149 +237,21 @@ const departments = [
 ];
 
 export const DepartmentsSection = ({}: DepartmentsSectionProps) => {
+  const { t } = useTranslation();
   const [selectedDepartment, setSelectedDepartment] = useState<typeof departments[0] | null>(null);
 
-  const getInitials = (name: string) => {
+  const getInitials = (nameKey: string) => {
+    const name = t(nameKey);
     return name.split(' ').map(n => n[0]).join('').toUpperCase();
   };
-
-  const DepartmentCard = ({ department }: { department: typeof departments[0] }) => (
-    <Card className="cursor-pointer hover:shadow-md transition-all">
-      <CardHeader className="pb-3">
-        <div className="flex items-start justify-between">
-          <div className="flex-1">
-            <CardTitle className="text-lg font-semibold mb-2">{department.name}</CardTitle>
-            <p className="text-sm text-muted-foreground mb-3">{department.description}</p>
-            <div className="space-y-2">
-              <div className="flex items-center space-x-2 text-sm">
-                <User className="h-4 w-4 text-muted-foreground" />
-                <span>Head: {department.head}</span>
-              </div>
-              <div className="flex items-center space-x-2 text-sm">
-                <MapPin className="h-4 w-4 text-muted-foreground" />
-                <span>{department.location}</span>
-              </div>
-              <div className="flex items-center space-x-2 text-sm">
-                <Users className="h-4 w-4 text-muted-foreground" />
-                <span>{department.memberCount} members</span>
-              </div>
-            </div>
-          </div>
-          <Badge variant="secondary" className="text-xs">
-            {department.memberCount}
-          </Badge>
-        </div>
-      </CardHeader>
-      
-      <CardContent className="pt-0">
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button 
-              variant="default" 
-              className="w-full"
-              onClick={() => setSelectedDepartment(department)}
-            >
-              <Building className="h-4 w-4 mr-2" />
-              View Department
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
-            <DialogHeader>
-              <DialogTitle className="flex items-center">
-                <Building className="h-5 w-5 mr-2" />
-                {department.name}
-              </DialogTitle>
-            </DialogHeader>
-            
-            <div className="space-y-6">
-              {/* Department Info */}
-              <div className="space-y-4">
-                <p className="text-muted-foreground">{department.description}</p>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                  <div className="flex items-center space-x-2">
-                    <User className="h-4 w-4 text-muted-foreground" />
-                    <span>Department Head: {department.head}</span>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <MapPin className="h-4 w-4 text-muted-foreground" />
-                    <span>{department.location}</span>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <Users className="h-4 w-4 text-muted-foreground" />
-                    <span>{department.memberCount} total members</span>
-                  </div>
-                </div>
-              </div>
-
-              <Separator />
-
-              {/* Department Members */}
-              <div>
-                <h3 className="text-lg font-semibold mb-4">Department Members</h3>
-                <div className="space-y-4">
-                  {department.members.map((member) => (
-                    <Card key={member.id} className={member.isHead ? "border-primary bg-primary/5" : ""}>
-                      <CardContent className="p-4">
-                        <div className="flex items-start space-x-4">
-                          <Avatar className="h-12 w-12">
-                            <AvatarImage src={member.avatar} />
-                            <AvatarFallback>{getInitials(member.name)}</AvatarFallback>
-                          </Avatar>
-                          <div className="flex-1">
-                            <div className="flex items-center space-x-2 mb-2">
-                              <h4 className="font-medium">{member.name}</h4>
-                              {member.isHead && (
-                                <Badge variant="default" className="text-xs">
-                                  Department Head
-                                </Badge>
-                              )}
-                            </div>
-                            <p className="text-sm text-muted-foreground mb-3">{member.role}</p>
-                            <div className="space-y-1 text-sm">
-                              <div className="flex items-center space-x-2">
-                                <Mail className="h-3 w-3 text-muted-foreground" />
-                                <span>{member.email}</span>
-                              </div>
-                              <div className="flex items-center space-x-2">
-                                <Phone className="h-3 w-3 text-muted-foreground" />
-                                <span>{member.phone}</span>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-                
-                {department.members.length < department.memberCount && (
-                  <Card className="mt-4 border-dashed">
-                    <CardContent className="p-4 text-center">
-                      <Users className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
-                      <p className="text-sm text-muted-foreground">
-                        +{department.memberCount - department.members.length} more members
-                      </p>
-                      <p className="text-xs text-muted-foreground">
-                        Contact HR for complete member list
-                      </p>
-                    </CardContent>
-                  </Card>
-                )}
-              </div>
-            </div>
-          </DialogContent>
-        </Dialog>
-      </CardContent>
-    </Card>
-  );
 
   return (
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-semibold">Departments</h2>
-          <p className="text-muted-foreground">Organizational structure and team members</p>
+          <h2 className="text-2xl font-semibold">{t('departments.title')}</h2>
+          <p className="text-muted-foreground">{t('departments.description')}</p>
         </div>
       </div>
 
@@ -388,61 +261,61 @@ export const DepartmentsSection = ({}: DepartmentsSectionProps) => {
           <Card key={department.id} className="hover:shadow-sm transition-all cursor-pointer">
             <CardContent className="p-4">
               <div className="flex items-start justify-between mb-3">
-                <h3 className="font-medium">{department.name}</h3>
+                <h3 className="font-medium">{t(department.nameKey)}</h3>
                 <Badge variant="secondary" className="text-xs">
                   {department.memberCount}
                 </Badge>
               </div>
               
               <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
-                {department.description}
+                {t(department.descriptionKey)}
               </p>
               
               <div className="space-y-2 text-xs text-muted-foreground mb-4">
                 <div className="flex items-center space-x-1">
                   <User className="h-3 w-3" />
-                  <span>Head: {department.head}</span>
+                  <span>{t('departments.head')}: {t(department.headKey)}</span>
                 </div>
                 <div className="flex items-center space-x-1">
                   <MapPin className="h-3 w-3" />
-                  <span>{department.location}</span>
+                  <span>{t(department.locationKey)}</span>
                 </div>
                 <div className="flex items-center space-x-1">
                   <Users className="h-3 w-3" />
-                  <span>{department.memberCount} members</span>
+                  <span>{department.memberCount} {t('departments.members')}</span>
                 </div>
               </div>
               
               <Dialog>
                 <DialogTrigger asChild>
                   <Button size="sm" className="w-full" onClick={() => setSelectedDepartment(department)}>
-                    View Department
+                    {t('departments.button.view')}
                   </Button>
                 </DialogTrigger>
                 <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
                   <DialogHeader>
                     <DialogTitle className="flex items-center">
                       <Building className="h-5 w-5 mr-2" />
-                      {department.name}
+                      {t(department.nameKey)}
                     </DialogTitle>
                   </DialogHeader>
                   
                   <div className="space-y-6">
                     {/* Department Info */}
                     <div className="space-y-4">
-                      <p className="text-muted-foreground">{department.description}</p>
+                      <p className="text-muted-foreground">{t(department.descriptionKey)}</p>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                         <div className="flex items-center space-x-2">
                           <User className="h-4 w-4 text-muted-foreground" />
-                          <span>Department Head: {department.head}</span>
+                          <span>{t('departments.head')}: {t(department.headKey)}</span>
                         </div>
                         <div className="flex items-center space-x-2">
                           <MapPin className="h-4 w-4 text-muted-foreground" />
-                          <span>{department.location}</span>
+                          <span>{t(department.locationKey)}</span>
                         </div>
                         <div className="flex items-center space-x-2">
                           <Users className="h-4 w-4 text-muted-foreground" />
-                          <span>{department.memberCount} total members</span>
+                          <span>{department.memberCount} {t('departments.total.members')}</span>
                         </div>
                       </div>
                     </div>
@@ -451,7 +324,7 @@ export const DepartmentsSection = ({}: DepartmentsSectionProps) => {
 
                     {/* Department Members */}
                     <div>
-                      <h3 className="text-lg font-semibold mb-4">Department Members</h3>
+                      <h3 className="text-lg font-semibold mb-4">{t('departments.members.title')}</h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {department.members.map((member) => (
                           <Card key={member.id} className={member.isHead ? "border-primary bg-primary/5" : ""}>
@@ -459,16 +332,16 @@ export const DepartmentsSection = ({}: DepartmentsSectionProps) => {
                               <div className="flex items-start space-x-3">
                                 <Avatar className="h-10 w-10">
                                   <AvatarImage src={member.avatar} />
-                                  <AvatarFallback>{getInitials(member.name)}</AvatarFallback>
+                                  <AvatarFallback>{getInitials(member.nameKey)}</AvatarFallback>
                                 </Avatar>
                                 <div className="flex-1">
                                   <div className="flex items-center space-x-2 mb-1">
-                                    <h4 className="font-medium text-sm">{member.name}</h4>
+                                    <h4 className="font-medium text-sm">{t(member.nameKey)}</h4>
                                     {member.isHead && (
-                                      <Badge variant="default" className="text-xs">Head</Badge>
+                                      <Badge variant="default" className="text-xs">{t('departments.badge.head')}</Badge>
                                     )}
                                   </div>
-                                  <p className="text-xs text-muted-foreground mb-2">{member.role}</p>
+                                  <p className="text-xs text-muted-foreground mb-2">{t(member.roleKey)}</p>
                                   <div className="space-y-1 text-xs">
                                     <div className="flex items-center space-x-1">
                                       <Mail className="h-3 w-3 text-muted-foreground" />
@@ -490,7 +363,7 @@ export const DepartmentsSection = ({}: DepartmentsSectionProps) => {
                             <CardContent className="p-4 text-center">
                               <Users className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
                               <p className="text-sm text-muted-foreground">
-                                +{department.memberCount - department.members.length} more members
+                                +{department.memberCount - department.members.length} {t('departments.more.members')}
                               </p>
                             </CardContent>
                           </Card>
@@ -512,7 +385,7 @@ export const DepartmentsSection = ({}: DepartmentsSectionProps) => {
             <div className="text-2xl font-bold text-primary">
               {departments.length}
             </div>
-            <div className="text-sm text-muted-foreground">Departments</div>
+            <div className="text-sm text-muted-foreground">{t('departments.stats.departments')}</div>
           </CardContent>
         </Card>
         <Card>
@@ -520,7 +393,7 @@ export const DepartmentsSection = ({}: DepartmentsSectionProps) => {
             <div className="text-2xl font-bold text-primary">
               {departments.reduce((sum, dept) => sum + dept.memberCount, 0)}
             </div>
-            <div className="text-sm text-muted-foreground">Total Employees</div>
+            <div className="text-sm text-muted-foreground">{t('departments.stats.total.employees')}</div>
           </CardContent>
         </Card>
         <Card>
@@ -528,7 +401,7 @@ export const DepartmentsSection = ({}: DepartmentsSectionProps) => {
             <div className="text-2xl font-bold text-primary">
               {Math.round(departments.reduce((sum, dept) => sum + dept.memberCount, 0) / departments.length)}
             </div>
-            <div className="text-sm text-muted-foreground">Average Size</div>
+            <div className="text-sm text-muted-foreground">{t('departments.stats.average.size')}</div>
           </CardContent>
         </Card>
         <Card>
@@ -536,7 +409,7 @@ export const DepartmentsSection = ({}: DepartmentsSectionProps) => {
             <div className="text-2xl font-bold text-primary">
               {departments.find(d => d.memberCount === Math.max(...departments.map(dept => dept.memberCount)))?.memberCount}
             </div>
-            <div className="text-sm text-muted-foreground">Largest Dept</div>
+            <div className="text-sm text-muted-foreground">{t('departments.stats.largest.dept')}</div>
           </CardContent>
         </Card>
       </div>
