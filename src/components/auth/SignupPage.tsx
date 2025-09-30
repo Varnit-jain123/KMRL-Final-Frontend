@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
-import kmrlLogo from "@/assets/kmrl-logo.png";
+import kmrlLogo from "@/assets/kmrl.png";
 
 interface SignupPageProps {
   onLoginClick: () => void;

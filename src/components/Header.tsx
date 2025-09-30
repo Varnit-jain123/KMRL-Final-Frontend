@@ -14,7 +14,8 @@ import {
 import { useTheme } from "next-themes";
 import { useToast } from "@/hooks/use-toast";
 import { useTranslation } from "../contexts/TranslationContext";
-import kmrlLogo from "@/assets/kmrl-logo.png";
+import kmrlLogo from "@/assets/kmrl.png";
+
 
 interface HeaderProps {
   onSearchOpen: () => void;
@@ -73,6 +74,7 @@ export const Header = ({ onSearchOpen, onNotificationsOpen, onSettingsOpen, onDa
             alt="KMRL Logo" 
             className="w-10 h-10 object-contain"
           />
+          
           <div className="flex flex-col">
             <span className="text-xl font-bold text-foreground">{t('brand.name')}</span>
             <span className="text-xs text-muted-foreground font-medium">{t('brand.subtitle')}</span>
