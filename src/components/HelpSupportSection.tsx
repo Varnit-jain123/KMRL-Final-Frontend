@@ -7,134 +7,12 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { useTranslation } from "../contexts/TranslationContext";
 
 interface HelpSupportSectionProps {}
 
-// Mock tutorial videos
-const tutorialVideos = [
-  {
-    id: "tutorial1",
-    title: "Getting Started with KMRL Document Platform",
-    duration: "5:32",
-    description: "Learn the basics of uploading, organizing, and searching documents",
-    thumbnail: "/api/placeholder/300/180",
-    category: "Getting Started"
-  },
-  {
-    id: "tutorial2", 
-    title: "AI Features Overview",
-    duration: "7:45",
-    description: "Discover how AI summaries, auto-tagging, and smart reminders work",
-    thumbnail: "/api/placeholder/300/180",
-    category: "AI Features"
-  },
-  {
-    id: "tutorial3",
-    title: "Setting Up Notifications and Reminders",
-    duration: "4:18",
-    description: "Configure your notification preferences and create effective reminders",
-    thumbnail: "/api/placeholder/300/180", 
-    category: "Notifications"
-  },
-  {
-    id: "tutorial4",
-    title: "Collaborating with Team Members",
-    duration: "6:23",
-    description: "Share documents, create notices, and work with department colleagues",
-    thumbnail: "/api/placeholder/300/180",
-    category: "Collaboration"
-  }
-];
-
-// Mock FAQ data
-const faqData = [
-  {
-    category: "General",
-    questions: [
-      {
-        id: "faq1",
-        question: "How do I upload a document to the platform?",
-        answer: "You can upload documents by clicking the 'Upload Document' button in the dashboard or navigation panel. Supported formats include PDF, DOCX, XLSX, and images. The AI will automatically process and categorize your document."
-      },
-      {
-        id: "faq2", 
-        question: "What file formats are supported?",
-        answer: "We support PDF, Microsoft Office documents (DOCX, XLSX, PPTX), images (JPG, PNG), and text files. Maximum file size is 50MB per document."
-      },
-      {
-        id: "faq3",
-        question: "How does the AI summarization work?",
-        answer: "Our AI automatically analyzes uploaded documents and creates concise summaries highlighting key points. You can also listen to audio versions of these summaries."
-      }
-    ]
-  },
-  {
-    category: "AI Features",
-    questions: [
-      {
-        id: "faq4",
-        question: "How accurate are the AI-generated tags?",
-        answer: "Our AI tagging system has a 90%+ accuracy rate. Tags are based on document content analysis and can be manually edited if needed."
-      },
-      {
-        id: "faq5",
-        question: "Can I disable AI features?",
-        answer: "Yes, you can toggle AI features on/off in the AI Features section. This includes auto-summaries, smart tagging, and reminder suggestions."
-      }
-    ]
-  },
-  {
-    category: "Security",
-    questions: [
-      {
-        id: "faq6",
-        question: "How secure is my data?",
-        answer: "All documents are encrypted at rest and in transit. We follow industry-standard security practices and comply with data protection regulations."
-      },
-      {
-        id: "faq7",
-        question: "Who can access my documents?",
-        answer: "Document access is controlled by role-based permissions. Only authorized team members and departments can view specific documents based on your organization's settings."
-      }
-    ]
-  }
-];
-
-// Mock troubleshooting guide
-const troubleshootingSteps = [
-  {
-    issue: "Documents not uploading",
-    solutions: [
-      "Check file size (must be under 50MB)",
-      "Verify file format is supported",
-      "Clear browser cache and cookies",
-      "Try uploading from a different browser",
-      "Contact support if issue persists"
-    ]
-  },
-  {
-    issue: "AI features not working",
-    solutions: [
-      "Ensure AI features are enabled in settings",
-      "Check document format compatibility",
-      "Wait for processing to complete (may take 1-2 minutes)",
-      "Refresh the page and try again",
-      "Contact technical support"
-    ]
-  },
-  {
-    issue: "Cannot access certain documents", 
-    solutions: [
-      "Verify you have proper permissions",
-      "Check if document was moved or deleted",
-      "Contact document owner or administrator",
-      "Ensure you're logged into correct account",
-      "Review access control settings"
-    ]
-  }
-];
-
-export const HelpSupportSection = ({ }: HelpSupportSectionProps) => {
+export const HelpSupportSection = ({}: HelpSupportSectionProps) => {
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState("tutorials");
   const [searchTerm, setSearchTerm] = useState("");
   const [supportForm, setSupportForm] = useState({
@@ -144,20 +22,145 @@ export const HelpSupportSection = ({ }: HelpSupportSectionProps) => {
     urgency: "normal"
   });
 
+  // Tutorial videos with translation keys
+  const tutorialVideos = [
+    {
+      id: "tutorial1",
+      titleKey: "help.tutorials.getting.started.title",
+      duration: "5:32",
+      descriptionKey: "help.tutorials.getting.started.description",
+      thumbnail: "/api/placeholder/300/180",
+      categoryKey: "help.tutorials.category.getting.started"
+    },
+    {
+      id: "tutorial2",
+      titleKey: "help.tutorials.ai.features.title",
+      duration: "7:45",
+      descriptionKey: "help.tutorials.ai.features.description",
+      thumbnail: "/api/placeholder/300/180",
+      categoryKey: "help.tutorials.category.ai.features"
+    },
+    {
+      id: "tutorial3",
+      titleKey: "help.tutorials.notifications.title",
+      duration: "4:18",
+      descriptionKey: "help.tutorials.notifications.description",
+      thumbnail: "/api/placeholder/300/180",
+      categoryKey: "help.tutorials.category.notifications"
+    },
+    {
+      id: "tutorial4",
+      titleKey: "help.tutorials.collaboration.title",
+      duration: "6:23",
+      descriptionKey: "help.tutorials.collaboration.description",
+      thumbnail: "/api/placeholder/300/180",
+      categoryKey: "help.tutorials.category.collaboration"
+    }
+  ];
+
+  // FAQ data with translation keys
+  const faqData = [
+    {
+      categoryKey: "help.faq.category.general",
+      questions: [
+        {
+          id: "faq1",
+          questionKey: "help.faq.general.upload.question",
+          answerKey: "help.faq.general.upload.answer"
+        },
+        {
+          id: "faq2",
+          questionKey: "help.faq.general.formats.question",
+          answerKey: "help.faq.general.formats.answer"
+        },
+        {
+          id: "faq3",
+          questionKey: "help.faq.general.ai.summary.question",
+          answerKey: "help.faq.general.ai.summary.answer"
+        }
+      ]
+    },
+    {
+      categoryKey: "help.faq.category.ai.features",
+      questions: [
+        {
+          id: "faq4",
+          questionKey: "help.faq.ai.tags.accuracy.question",
+          answerKey: "help.faq.ai.tags.accuracy.answer"
+        },
+        {
+          id: "faq5",
+          questionKey: "help.faq.ai.disable.question",
+          answerKey: "help.faq.ai.disable.answer"
+        }
+      ]
+    },
+    {
+      categoryKey: "help.faq.category.security",
+      questions: [
+        {
+          id: "faq6",
+          questionKey: "help.faq.security.data.question",
+          answerKey: "help.faq.security.data.answer"
+        },
+        {
+          id: "faq7",
+          questionKey: "help.faq.security.access.question",
+          answerKey: "help.faq.security.access.answer"
+        }
+      ]
+    }
+  ];
+
+  // Troubleshooting with translation keys
+  const troubleshootingSteps = [
+    {
+      issueKey: "help.troubleshooting.upload.issue",
+      solutionKeys: [
+        "help.troubleshooting.upload.solution.1",
+        "help.troubleshooting.upload.solution.2",
+        "help.troubleshooting.upload.solution.3",
+        "help.troubleshooting.upload.solution.4",
+        "help.troubleshooting.upload.solution.5"
+      ]
+    },
+    {
+      issueKey: "help.troubleshooting.ai.issue",
+      solutionKeys: [
+        "help.troubleshooting.ai.solution.1",
+        "help.troubleshooting.ai.solution.2",
+        "help.troubleshooting.ai.solution.3",
+        "help.troubleshooting.ai.solution.4",
+        "help.troubleshooting.ai.solution.5"
+      ]
+    },
+    {
+      issueKey: "help.troubleshooting.access.issue",
+      solutionKeys: [
+        "help.troubleshooting.access.solution.1",
+        "help.troubleshooting.access.solution.2",
+        "help.troubleshooting.access.solution.3",
+        "help.troubleshooting.access.solution.4",
+        "help.troubleshooting.access.solution.5"
+      ]
+    }
+  ];
+
   const filteredFAQ = faqData.map(category => ({
     ...category,
-    questions: category.questions.filter(q => 
-      q.question.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      q.answer.toLowerCase().includes(searchTerm.toLowerCase())
-    )
+    questions: category.questions.filter(q => {
+      const question = t(q.questionKey);
+      const answer = t(q.answerKey);
+      return question.toLowerCase().includes(searchTerm.toLowerCase()) ||
+             answer.toLowerCase().includes(searchTerm.toLowerCase());
+    })
   })).filter(category => category.questions.length > 0);
 
   const handleSubmitSupport = () => {
-    // Handle support form submission
     console.log("Support form submitted:", supportForm);
     setSupportForm({
       subject: "",
-      category: "general", 
+      category: "general",
       message: "",
       urgency: "normal"
     });
@@ -167,8 +170,8 @@ export const HelpSupportSection = ({ }: HelpSupportSectionProps) => {
     <div className="space-y-6">
       {/* Header */}
       <div className="text-center">
-        <h2 className="text-2xl font-semibold mb-2">Help & Support</h2>
-        <p className="text-muted-foreground">Find answers, watch tutorials, and get the help you need</p>
+        <h2 className="text-2xl font-semibold mb-2">{t('help.title')}</h2>
+        <p className="text-muted-foreground">{t('help.subtitle')}</p>
       </div>
 
       {/* Quick Actions */}
@@ -176,24 +179,24 @@ export const HelpSupportSection = ({ }: HelpSupportSectionProps) => {
         <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => setActiveTab("tutorials")}>
           <CardContent className="p-4 text-center">
             <Video className="h-8 w-8 mx-auto mb-2 text-primary" />
-            <h3 className="font-medium">Video Tutorials</h3>
-            <p className="text-sm text-muted-foreground">Step-by-step guides</p>
+            <h3 className="font-medium">{t('help.quick.video.tutorials')}</h3>
+            <p className="text-sm text-muted-foreground">{t('help.quick.video.description')}</p>
           </CardContent>
         </Card>
         
         <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => setActiveTab("faq")}>
           <CardContent className="p-4 text-center">
             <HelpCircle className="h-8 w-8 mx-auto mb-2 text-primary" />
-            <h3 className="font-medium">FAQ</h3>
-            <p className="text-sm text-muted-foreground">Common questions</p>
+            <h3 className="font-medium">{t('help.quick.faq')}</h3>
+            <p className="text-sm text-muted-foreground">{t('help.quick.faq.description')}</p>
           </CardContent>
         </Card>
         
         <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => setActiveTab("contact")}>
           <CardContent className="p-4 text-center">
             <MessageCircle className="h-8 w-8 mx-auto mb-2 text-primary" />
-            <h3 className="font-medium">Contact Support</h3>
-            <p className="text-sm text-muted-foreground">Get direct help</p>
+            <h3 className="font-medium">{t('help.quick.contact')}</h3>
+            <p className="text-sm text-muted-foreground">{t('help.quick.contact.description')}</p>
           </CardContent>
         </Card>
       </div>
@@ -203,19 +206,19 @@ export const HelpSupportSection = ({ }: HelpSupportSectionProps) => {
         <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="tutorials">
             <Video className="h-4 w-4 mr-1" />
-            Tutorials
+            {t('help.tabs.tutorials')}
           </TabsTrigger>
           <TabsTrigger value="faq">
             <HelpCircle className="h-4 w-4 mr-1" />
-            FAQ
+            {t('help.tabs.faq')}
           </TabsTrigger>
           <TabsTrigger value="troubleshooting">
             <FileText className="h-4 w-4 mr-1" />
-            Troubleshooting
+            {t('help.tabs.troubleshooting')}
           </TabsTrigger>
           <TabsTrigger value="contact">
             <MessageCircle className="h-4 w-4 mr-1" />
-            Contact
+            {t('help.tabs.contact')}
           </TabsTrigger>
         </TabsList>
 
@@ -232,13 +235,13 @@ export const HelpSupportSection = ({ }: HelpSupportSectionProps) => {
                 </div>
                 <CardContent className="p-4">
                   <div className="flex items-start justify-between mb-2">
-                    <h3 className="font-medium line-clamp-2">{video.title}</h3>
-                    <Badge variant="outline" className="text-xs">{video.category}</Badge>
+                    <h3 className="font-medium line-clamp-2">{t(video.titleKey)}</h3>
+                    <Badge variant="outline" className="text-xs">{t(video.categoryKey)}</Badge>
                   </div>
-                  <p className="text-sm text-muted-foreground mb-3 line-clamp-2">{video.description}</p>
+                  <p className="text-sm text-muted-foreground mb-3 line-clamp-2">{t(video.descriptionKey)}</p>
                   <Button variant="outline" className="w-full">
                     <Play className="h-4 w-4 mr-2" />
-                    Watch Tutorial
+                    {t('help.button.watch.tutorial')}
                   </Button>
                 </CardContent>
               </Card>
@@ -251,7 +254,7 @@ export const HelpSupportSection = ({ }: HelpSupportSectionProps) => {
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
             <Input
-              placeholder="Search FAQ..."
+              placeholder={t('help.search.faq.placeholder')}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="pl-10"
@@ -259,17 +262,17 @@ export const HelpSupportSection = ({ }: HelpSupportSectionProps) => {
           </div>
           
           <div className="space-y-6">
-            {filteredFAQ.map((category) => (
-              <div key={category.category}>
-                <h3 className="text-lg font-medium mb-3">{category.category}</h3>
+            {filteredFAQ.map((category, index) => (
+              <div key={index}>
+                <h3 className="text-lg font-medium mb-3">{t(category.categoryKey)}</h3>
                 <Accordion type="multiple" className="space-y-2">
                   {category.questions.map((faq) => (
                     <AccordionItem key={faq.id} value={faq.id} className="border rounded-lg px-4">
                       <AccordionTrigger className="text-left">
-                        {faq.question}
+                        {t(faq.questionKey)}
                       </AccordionTrigger>
                       <AccordionContent className="text-muted-foreground">
-                        {faq.answer}
+                        {t(faq.answerKey)}
                       </AccordionContent>
                     </AccordionItem>
                   ))}
@@ -281,20 +284,20 @@ export const HelpSupportSection = ({ }: HelpSupportSectionProps) => {
 
         {/* Troubleshooting */}
         <TabsContent value="troubleshooting" className="space-y-4">
-          <h3 className="text-lg font-medium">Common Issues & Solutions</h3>
+          <h3 className="text-lg font-medium">{t('help.troubleshooting.title')}</h3>
           
           <div className="space-y-4">
             {troubleshootingSteps.map((item, index) => (
               <Card key={index}>
                 <CardHeader>
-                  <CardTitle className="text-base text-destructive">{item.issue}</CardTitle>
+                  <CardTitle className="text-base text-destructive">{t(item.issueKey)}</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-2">
-                    {item.solutions.map((solution, solutionIndex) => (
+                    {item.solutionKeys.map((solutionKey, solutionIndex) => (
                       <div key={solutionIndex} className="flex items-start space-x-2">
                         <span className="text-sm font-medium text-primary mt-0.5">{solutionIndex + 1}.</span>
-                        <span className="text-sm">{solution}</span>
+                        <span className="text-sm">{t(solutionKey)}</span>
                       </div>
                     ))}
                   </div>
@@ -310,28 +313,28 @@ export const HelpSupportSection = ({ }: HelpSupportSectionProps) => {
             {/* Contact Information */}
             <Card>
               <CardHeader>
-                <CardTitle>Contact Information</CardTitle>
+                <CardTitle>{t('help.contact.info.title')}</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex items-center space-x-3">
                   <Mail className="h-5 w-5 text-primary" />
                   <div>
-                    <p className="font-medium">Email Support</p>
+                    <p className="font-medium">{t('help.contact.email.label')}</p>
                     <p className="text-sm text-muted-foreground">support@kmrl.gov.in</p>
                   </div>
                 </div>
                 <div className="flex items-center space-x-3">
                   <Phone className="h-5 w-5 text-primary" />
                   <div>
-                    <p className="font-medium">Phone Support</p>
+                    <p className="font-medium">{t('help.contact.phone.label')}</p>
                     <p className="text-sm text-muted-foreground">+91-484-2533-800</p>
                   </div>
                 </div>
                 <div className="flex items-center space-x-3">
                   <MessageCircle className="h-5 w-5 text-primary" />
                   <div>
-                    <p className="font-medium">Live Chat</p>
-                    <p className="text-sm text-muted-foreground">Available 9 AM - 6 PM IST</p>
+                    <p className="font-medium">{t('help.contact.chat.label')}</p>
+                    <p className="text-sm text-muted-foreground">{t('help.contact.chat.hours')}</p>
                   </div>
                 </div>
               </CardContent>
@@ -340,59 +343,59 @@ export const HelpSupportSection = ({ }: HelpSupportSectionProps) => {
             {/* Support Form */}
             <Card>
               <CardHeader>
-                <CardTitle>Submit Support Request</CardTitle>
+                <CardTitle>{t('help.contact.form.title')}</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
-                  <label className="text-sm font-medium">Subject</label>
+                  <label className="text-sm font-medium">{t('help.contact.form.subject')}</label>
                   <Input
-                    placeholder="Brief description of your issue"
+                    placeholder={t('help.contact.form.subject.placeholder')}
                     value={supportForm.subject}
                     onChange={(e) => setSupportForm(prev => ({ ...prev, subject: e.target.value }))}
                   />
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="text-sm font-medium">Category</label>
-                    <select 
+                    <label className="text-sm font-medium">{t('help.contact.form.category')}</label>
+                    <select
                       className="w-full p-2 border rounded-md text-sm"
                       value={supportForm.category}
                       onChange={(e) => setSupportForm(prev => ({ ...prev, category: e.target.value }))}
                     >
-                      <option value="general">General</option>
-                      <option value="technical">Technical Issue</option>
-                      <option value="account">Account & Access</option>
-                      <option value="ai-features">AI Features</option>
+                      <option value="general">{t('help.contact.form.category.general')}</option>
+                      <option value="technical">{t('help.contact.form.category.technical')}</option>
+                      <option value="account">{t('help.contact.form.category.account')}</option>
+                      <option value="ai-features">{t('help.contact.form.category.ai')}</option>
                     </select>
                   </div>
                   <div>
-                    <label className="text-sm font-medium">Urgency</label>
-                    <select 
+                    <label className="text-sm font-medium">{t('help.contact.form.urgency')}</label>
+                    <select
                       className="w-full p-2 border rounded-md text-sm"
                       value={supportForm.urgency}
                       onChange={(e) => setSupportForm(prev => ({ ...prev, urgency: e.target.value }))}
                     >
-                      <option value="normal">Normal</option>
-                      <option value="high">High</option>
-                      <option value="urgent">Urgent</option>
+                      <option value="normal">{t('help.contact.form.urgency.normal')}</option>
+                      <option value="high">{t('help.contact.form.urgency.high')}</option>
+                      <option value="urgent">{t('help.contact.form.urgency.urgent')}</option>
                     </select>
                   </div>
                 </div>
                 <div>
-                  <label className="text-sm font-medium">Message</label>
+                  <label className="text-sm font-medium">{t('help.contact.form.message')}</label>
                   <Textarea
-                    placeholder="Describe your issue in detail..."
+                    placeholder={t('help.contact.form.message.placeholder')}
                     rows={4}
                     value={supportForm.message}
                     onChange={(e) => setSupportForm(prev => ({ ...prev, message: e.target.value }))}
                   />
                 </div>
-                <Button 
+                <Button
                   className="w-full"
                   onClick={handleSubmitSupport}
                   disabled={!supportForm.subject || !supportForm.message}
                 >
-                  Submit Support Request
+                  {t('help.contact.form.submit')}
                 </Button>
               </CardContent>
             </Card>

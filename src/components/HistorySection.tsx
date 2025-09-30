@@ -6,114 +6,133 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useTranslation } from "../contexts/TranslationContext";
 
 interface HistorySectionProps {}
 
-// Mock history data
-const downloadHistory = [
-  {
-    id: "dl1",
-    documentTitle: "Metro Expansion Project Report",
-    documentType: "PDF",
-    downloadDate: "2024-01-15T14:30:00Z",
-    fileSize: "2.4 MB",
-    category: "Project Reports"
-  },
-  {
-    id: "dl2",
-    documentTitle: "Safety Protocol Guidelines", 
-    documentType: "DOCX",
-    downloadDate: "2024-01-14T09:15:00Z",
-    fileSize: "1.8 MB",
-    category: "Safety"
-  },
-  {
-    id: "dl3",
-    documentTitle: "Budget Allocation Q4 2024",
-    documentType: "XLSX",
-    downloadDate: "2024-01-13T16:45:00Z", 
-    fileSize: "512 KB",
-    category: "Finance"
-  },
-  {
-    id: "dl4",
-    documentTitle: "Employee Training Manual",
-    documentType: "PDF",
-    downloadDate: "2024-01-12T11:20:00Z",
-    fileSize: "3.2 MB",
-    category: "Training"
-  },
-  {
-    id: "dl5",
-    documentTitle: "Technical Specifications Phase 2",
-    documentType: "PDF", 
-    downloadDate: "2024-01-11T13:10:00Z",
-    fileSize: "4.1 MB",
-    category: "Project Reports"
-  }
-];
-
-const noticesHistory = [
-  {
-    id: "nh1",
-    noticeTitle: "System Maintenance Schedule",
-    readDate: "2024-01-15T10:00:00Z",
-    priority: "high",
-    department: "IT Department",
-    author: "IT Admin"
-  },
-  {
-    id: "nh2",
-    noticeTitle: "New Safety Protocol Implementation",
-    readDate: "2024-01-14T15:30:00Z",
-    priority: "urgent", 
-    department: "Safety Department",
-    author: "Safety Officer"
-  },
-  {
-    id: "nh3",
-    noticeTitle: "Monthly Team Meeting",
-    readDate: "2024-01-13T12:15:00Z",
-    priority: "normal",
-    department: "HR Department", 
-    author: "HR Manager"
-  },
-  {
-    id: "nh4",
-    noticeTitle: "Budget Review Guidelines",
-    readDate: "2024-01-12T09:45:00Z",
-    priority: "normal",
-    department: "Finance Department",
-    author: "Finance Director"
-  },
-  {
-    id: "nh5",
-    noticeTitle: "Emergency Drill Schedule",
-    readDate: "2024-01-11T14:20:00Z",
-    priority: "high",
-    department: "Safety Department",
-    author: "Safety Coordinator"
-  }
-];
-
-const categories = ["All", "Project Reports", "Safety", "Finance", "Training", "Operations"];
-const departments = ["All", "IT Department", "Safety Department", "HR Department", "Finance Department", "Engineering Department"];
-
 export const HistorySection = ({}: HistorySectionProps) => {
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState("downloads");
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [selectedDepartment, setSelectedDepartment] = useState("All");
 
+  // Mock history data with translation keys
+  const downloadHistory = [
+    {
+      id: "dl1",
+      documentTitleKey: "history.downloads.metro.expansion",
+      documentType: "PDF",
+      downloadDate: "2024-01-15T14:30:00Z",
+      fileSize: "2.4 MB",
+      categoryKey: "documents.category.project.reports"
+    },
+    {
+      id: "dl2",
+      documentTitleKey: "history.downloads.safety.protocol",
+      documentType: "DOCX",
+      downloadDate: "2024-01-14T09:15:00Z",
+      fileSize: "1.8 MB",
+      categoryKey: "documents.category.safety"
+    },
+    {
+      id: "dl3",
+      documentTitleKey: "history.downloads.budget.allocation",
+      documentType: "XLSX",
+      downloadDate: "2024-01-13T16:45:00Z",
+      fileSize: "512 KB",
+      categoryKey: "documents.category.finance"
+    },
+    {
+      id: "dl4",
+      documentTitleKey: "history.downloads.training.manual",
+      documentType: "PDF",
+      downloadDate: "2024-01-12T11:20:00Z",
+      fileSize: "3.2 MB",
+      categoryKey: "documents.category.training"
+    },
+    {
+      id: "dl5",
+      documentTitleKey: "history.downloads.technical.specs",
+      documentType: "PDF",
+      downloadDate: "2024-01-11T13:10:00Z",
+      fileSize: "4.1 MB",
+      categoryKey: "documents.category.project.reports"
+    }
+  ];
+
+  const noticesHistory = [
+    {
+      id: "nh1",
+      noticeTitleKey: "history.notices.system.maintenance",
+      readDate: "2024-01-15T10:00:00Z",
+      priority: "high",
+      departmentKey: "history.departments.it",
+      authorKey: "history.authors.it.admin"
+    },
+    {
+      id: "nh2",
+      noticeTitleKey: "history.notices.safety.protocol",
+      readDate: "2024-01-14T15:30:00Z",
+      priority: "urgent",
+      departmentKey: "history.departments.safety",
+      authorKey: "history.authors.safety.officer"
+    },
+    {
+      id: "nh3",
+      noticeTitleKey: "history.notices.team.meeting",
+      readDate: "2024-01-13T12:15:00Z",
+      priority: "normal",
+      departmentKey: "history.departments.hr",
+      authorKey: "history.authors.hr.manager"
+    },
+    {
+      id: "nh4",
+      noticeTitleKey: "history.notices.budget.review",
+      readDate: "2024-01-12T09:45:00Z",
+      priority: "normal",
+      departmentKey: "history.departments.finance",
+      authorKey: "history.authors.finance.director"
+    },
+    {
+      id: "nh5",
+      noticeTitleKey: "history.notices.emergency.drill",
+      readDate: "2024-01-11T14:20:00Z",
+      priority: "high",
+      departmentKey: "history.departments.safety",
+      authorKey: "history.authors.safety.coordinator"
+    }
+  ];
+
+  const categories = [
+    { key: "All", labelKey: "documents.category.all" },
+    { key: "Project Reports", labelKey: "documents.category.project.reports" },
+    { key: "Safety", labelKey: "documents.category.safety" },
+    { key: "Finance", labelKey: "documents.category.finance" },
+    { key: "Training", labelKey: "documents.category.training" },
+    { key: "Operations", labelKey: "documents.category.operations" }
+  ];
+
+  const departments = [
+    { key: "All", labelKey: "history.filter.all" },
+    { key: "IT Department", labelKey: "history.departments.it" },
+    { key: "Safety Department", labelKey: "history.departments.safety" },
+    { key: "HR Department", labelKey: "history.departments.hr" },
+    { key: "Finance Department", labelKey: "history.departments.finance" },
+    { key: "Engineering Department", labelKey: "history.departments.engineering" }
+  ];
+
   const filteredDownloads = downloadHistory.filter(item => {
-    const matchesSearch = item.documentTitle.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = selectedCategory === "All" || item.category === selectedCategory;
+    const title = t(item.documentTitleKey);
+    const matchesSearch = title.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory = selectedCategory === "All" || t(item.categoryKey) === t(categories.find(c => c.key === selectedCategory)?.labelKey || "");
     return matchesSearch && matchesCategory;
   });
 
   const filteredNotices = noticesHistory.filter(item => {
-    const matchesSearch = item.noticeTitle.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesDepartment = selectedDepartment === "All" || item.department === selectedDepartment;
+    const title = t(item.noticeTitleKey);
+    const matchesSearch = title.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesDepartment = selectedDepartment === "All" || t(item.departmentKey) === t(departments.find(d => d.key === selectedDepartment)?.labelKey || "");
     return matchesSearch && matchesDepartment;
   });
 
@@ -133,6 +152,10 @@ export const HistorySection = ({}: HistorySectionProps) => {
     }
   };
 
+  const getPriorityLabel = (priority: string) => {
+    return t(`history.priority.${priority}`);
+  };
+
   const DownloadHistoryCard = ({ item }: { item: typeof downloadHistory[0] }) => (
     <Card className="hover:shadow-md transition-all">
       <CardContent className="p-4">
@@ -140,23 +163,23 @@ export const HistorySection = ({}: HistorySectionProps) => {
           <div className="flex items-center space-x-3">
             {getFileIcon(item.documentType)}
             <div>
-              <h4 className="font-medium text-sm">{item.documentTitle}</h4>
+              <h4 className="font-medium text-sm">{t(item.documentTitleKey)}</h4>
               <p className="text-xs text-muted-foreground">
                 {item.documentType} • {item.fileSize}
               </p>
             </div>
           </div>
           <Badge variant="secondary" className="text-xs">
-            {item.category}
+            {t(item.categoryKey)}
           </Badge>
         </div>
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-1 text-xs text-muted-foreground">
             <Download className="h-3 w-3" />
-            <span>Downloaded: {formatDate(item.downloadDate)}</span>
+            <span>{t('history.downloaded')}: {formatDate(item.downloadDate)}</span>
           </div>
           <Button variant="outline" size="sm" className="h-6 text-xs">
-            Download Again
+            {t('history.download.again')}
           </Button>
         </div>
       </CardContent>
@@ -170,23 +193,23 @@ export const HistorySection = ({}: HistorySectionProps) => {
           <div className="flex items-center space-x-3">
             <Bell className="h-4 w-4 text-primary" />
             <div>
-              <h4 className="font-medium text-sm">{item.noticeTitle}</h4>
+              <h4 className="font-medium text-sm">{t(item.noticeTitleKey)}</h4>
               <p className="text-xs text-muted-foreground">
-                {item.department} • {item.author}
+                {t(item.departmentKey)} • {t(item.authorKey)}
               </p>
             </div>
           </div>
           <Badge variant={getPriorityColor(item.priority)} className="text-xs">
-            {item.priority.charAt(0).toUpperCase() + item.priority.slice(1)}
+            {getPriorityLabel(item.priority)}
           </Badge>
         </div>
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-1 text-xs text-muted-foreground">
             <Eye className="h-3 w-3" />
-            <span>Read: {formatDate(item.readDate)}</span>
+            <span>{t('history.read')}: {formatDate(item.readDate)}</span>
           </div>
           <Button variant="outline" size="sm" className="h-6 text-xs">
-            View Again
+            {t('history.view.again')}
           </Button>
         </div>
       </CardContent>
@@ -198,8 +221,8 @@ export const HistorySection = ({}: HistorySectionProps) => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-semibold">History</h2>
-          <p className="text-muted-foreground">Track your downloads and read notices</p>
+          <h2 className="text-2xl font-semibold">{t('history.title')}</h2>
+          <p className="text-muted-foreground">{t('history.subtitle')}</p>
         </div>
       </div>
 
@@ -208,7 +231,7 @@ export const HistorySection = ({}: HistorySectionProps) => {
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
           <Input
-            placeholder="Search history..."
+            placeholder={t('history.search.placeholder')}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="pl-10"
@@ -223,8 +246,8 @@ export const HistorySection = ({}: HistorySectionProps) => {
               </SelectTrigger>
               <SelectContent>
                 {categories.map((category) => (
-                  <SelectItem key={category} value={category}>
-                    {category}
+                  <SelectItem key={category.key} value={category.key}>
+                    {t(category.labelKey)}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -237,8 +260,8 @@ export const HistorySection = ({}: HistorySectionProps) => {
               </SelectTrigger>
               <SelectContent>
                 {departments.map((department) => (
-                  <SelectItem key={department} value={department}>
-                    {department}
+                  <SelectItem key={department.key} value={department.key}>
+                    {t(department.labelKey)}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -252,11 +275,11 @@ export const HistorySection = ({}: HistorySectionProps) => {
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="downloads">
             <Download className="h-4 w-4 mr-1" />
-            Downloads ({downloadHistory.length})
+            {t('history.tabs.downloads')} ({downloadHistory.length})
           </TabsTrigger>
           <TabsTrigger value="notices">
             <Bell className="h-4 w-4 mr-1" />
-            Read Notices ({noticesHistory.length})
+            {t('history.tabs.notices')} ({noticesHistory.length})
           </TabsTrigger>
         </TabsList>
 
@@ -270,7 +293,7 @@ export const HistorySection = ({}: HistorySectionProps) => {
                     <div className="text-2xl font-bold text-primary">
                       {downloadHistory.length}
                     </div>
-                    <div className="text-sm text-muted-foreground">Total Downloads</div>
+                    <div className="text-sm text-muted-foreground">{t('history.stats.total.downloads')}</div>
                   </CardContent>
                 </Card>
                 <Card>
@@ -281,15 +304,15 @@ export const HistorySection = ({}: HistorySectionProps) => {
                         return acc + (item.fileSize.includes('MB') ? size : size / 1024);
                       }, 0) * 10) / 10}
                     </div>
-                    <div className="text-sm text-muted-foreground">Total MB</div>
+                    <div className="text-sm text-muted-foreground">{t('history.stats.total.mb')}</div>
                   </CardContent>
                 </Card>
                 <Card>
                   <CardContent className="p-4 text-center">
                     <div className="text-2xl font-bold text-primary">
-                      {new Set(downloadHistory.map(item => item.category)).size}
+                      {new Set(downloadHistory.map(item => item.categoryKey)).size}
                     </div>
-                    <div className="text-sm text-muted-foreground">Categories</div>
+                    <div className="text-sm text-muted-foreground">{t('history.stats.categories')}</div>
                   </CardContent>
                 </Card>
                 <Card>
@@ -302,7 +325,7 @@ export const HistorySection = ({}: HistorySectionProps) => {
                         return downloadDate >= sevenDaysAgo;
                       }).length}
                     </div>
-                    <div className="text-sm text-muted-foreground">This Week</div>
+                    <div className="text-sm text-muted-foreground">{t('history.stats.this.week')}</div>
                   </CardContent>
                 </Card>
               </div>
@@ -317,8 +340,8 @@ export const HistorySection = ({}: HistorySectionProps) => {
           ) : (
             <div className="text-center py-8">
               <Download className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-              <h3 className="text-lg font-medium mb-2">No downloads found</h3>
-              <p className="text-muted-foreground">Try adjusting your search terms or filters</p>
+              <h3 className="text-lg font-medium mb-2">{t('history.no.downloads.title')}</h3>
+              <p className="text-muted-foreground">{t('history.no.downloads.description')}</p>
             </div>
           )}
         </TabsContent>
@@ -333,7 +356,7 @@ export const HistorySection = ({}: HistorySectionProps) => {
                     <div className="text-2xl font-bold text-primary">
                       {noticesHistory.length}
                     </div>
-                    <div className="text-sm text-muted-foreground">Total Read</div>
+                    <div className="text-sm text-muted-foreground">{t('history.stats.total.read')}</div>
                   </CardContent>
                 </Card>
                 <Card>
@@ -341,15 +364,15 @@ export const HistorySection = ({}: HistorySectionProps) => {
                     <div className="text-2xl font-bold text-primary">
                       {noticesHistory.filter(item => item.priority === "urgent").length}
                     </div>
-                    <div className="text-sm text-muted-foreground">Urgent</div>
+                    <div className="text-sm text-muted-foreground">{t('history.stats.urgent')}</div>
                   </CardContent>
                 </Card>
                 <Card>
                   <CardContent className="p-4 text-center">
                     <div className="text-2xl font-bold text-primary">
-                      {new Set(noticesHistory.map(item => item.department)).size}
+                      {new Set(noticesHistory.map(item => item.departmentKey)).size}
                     </div>
-                    <div className="text-sm text-muted-foreground">Departments</div>
+                    <div className="text-sm text-muted-foreground">{t('history.stats.departments')}</div>
                   </CardContent>
                 </Card>
                 <Card>
@@ -362,7 +385,7 @@ export const HistorySection = ({}: HistorySectionProps) => {
                         return readDate >= sevenDaysAgo;
                       }).length}
                     </div>
-                    <div className="text-sm text-muted-foreground">This Week</div>
+                    <div className="text-sm text-muted-foreground">{t('history.stats.this.week')}</div>
                   </CardContent>
                 </Card>
               </div>
@@ -377,8 +400,8 @@ export const HistorySection = ({}: HistorySectionProps) => {
           ) : (
             <div className="text-center py-8">
               <Bell className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-              <h3 className="text-lg font-medium mb-2">No notices found</h3>
-              <p className="text-muted-foreground">Try adjusting your search terms or filters</p>
+              <h3 className="text-lg font-medium mb-2">{t('history.no.notices.title')}</h3>
+              <p className="text-muted-foreground">{t('history.no.notices.description')}</p>
             </div>
           )}
         </TabsContent>
